@@ -495,6 +495,7 @@ def calcularLitrosAguaPorDia():
 #Faça uma função que resolva uma equação de 2º grau.
 #Forma: AX² + BX + C = 0
 #Entradas: A, B e C
+#fiquei mt tempo pq confundi sqrt da biblioteca math com str, fui muleke, NAO CONFUNDIR MAIS
 def resolverEquacaoSegundoGrau():
     A = float(input("Digite o valor de A: "))
     B = float(input("Digite o valor de B: "))

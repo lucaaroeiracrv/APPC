@@ -506,12 +506,13 @@ def resolverEquacaoSegundoGrau():
         if delta < 0: #porque número negativo não tem raiz quadrada real
             print("A equação não tem raízes reais.")
         elif delta == 0: #o numero 0 tem apenas uma raiz real, que é ele mesmo
-            raiz = -B / (2*A) # x = -b / 2a
+            raiz = -B / (2*A) # x = b / 2a
             print(f"A equação tem uma raiz real: {raiz}")
         else: #existem duas raizes reais e diferentes
-            raiz1 = (-B + delta**0.5) / (2*A) #x1 = (-b + √Δ) / 2a
-            raiz2 = (-B - delta**0.5) / (2*A) #x2 = (-b - √Δ) / 2a
-            print(f"A equação tem duas raízes reais: {raiz1} e {raiz2}")
+            #√Δ é a mesma coisa que Δ**1/2 ou Δ**0.5
+            x1 = (-B + delta**0.5) / (2*A) #x1 = (-b + √Δ) / 2a   
+            x2 = (-B - delta**0.5) / (2*A) #x2 = (-b - √Δ) / 2a 
+            print(f"A equação tem duas raízes reais: {x1} e {x2}")
 
 
 # Programas com menu

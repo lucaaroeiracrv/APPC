@@ -767,9 +767,9 @@ def verificarDataValida():
     print("Data válida.")
 
 #funcao q eu criei para resolver de um outro jeito os exercicios abaixo
-def numero_por_extenso(num: int) -> str:
+def nPorExtenso(num: int) -> str:
     if num < 0:
-        return "menos " + numero_por_extenso(-num)
+        return "menos " + nPorExtenso(-num)
     if num == 0:
         return "zero"
 
@@ -811,6 +811,124 @@ def numero_por_extenso(num: int) -> str:
         partes.append(unidades[num])
 
     return " ".join(partes)
+
+#funcao para criar funocoes de if, elif e else
+def gerarFuncaoIfElseComNPorExtenso():
+    
+    minimo = int(input("Digite o número mínimo: "))
+    maximo = int(input("Digite o número máximo: "))
+
+    if minimo > maximo:
+        print("Erro: o número mínimo não pode ser maior que o máximo.")
+        return
+
+    # Definição automática do nome da função gerada
+    if minimo == 0:
+        nomeFuncao = f"n{maximo}ToExtensoIfElse"
+    elif minimo < 0:
+        nomeFuncao = f"nMenos{abs(minimo)}a{maximo}ToExtensoIfElse"
+    else:
+        # numero minimo maior que 0, maniaco
+        nomeFuncao = f"n{minimo}a{maximo}ToExtensoIfElse"
+
+    nomeArquivo = f"{nomeFuncao}.txt"
+
+    with open(nomeArquivo, "w", encoding="utf-8") as f:
+
+        # Cabeçalho da função gerada
+        f.write(f"def {nomeFuncao}():\n")
+        f.write(
+            f'    numero = int(input("Digite um número entre {minimo} e {maximo}: "))\n'
+        )
+        f.write(f"    if numero < {minimo} or numero > {maximo}:\n")
+        f.write('        print("Fora do intervalo permitido.")\n')
+        f.write("        return\n\n")
+
+        # Geração dos if / elif
+        for i in range(minimo, maximo + 1):
+            if i == minimo:
+                f.write(f"    if numero == {i}:\n")
+            else:
+                f.write(f"    elif numero == {i}:\n")
+
+            f.write(f'        print("{nPorExtenso(i)}")\n')
+
+    print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")
+
+def gerarFuncaoIfElseSemNPorExtenso():
+    minimo = int(input("Digite o número mínimo: "))
+    maximo = int(input("Digite o número máximo: "))
+    if minimo > maximo:
+        print("Erro: o número mínimo não pode ser maior que o máximo.")
+        return
+    #nome da funcao
+    if minimo == 0:
+        nomeFuncao = f"n{maximo}ToExtensoIfElse"
+    elif minimo < 0:
+        nomeFuncao = f"nMenos{abs(minimo)}a{maximo}ToExtensoIfElse"
+    else:
+        nomeFuncao = f"n{minimo}a{maximo}ToExtensoIfElse"
+    nomeArquivo = f"{nomeFuncao}.txt"
+    #tabelas
+    unidades = [
+        "zero", "um", "dois", "três", "quatro",
+        "cinco", "seis", "sete", "oito", "nove"
+    ]
+    dezADezenove = [
+        "dez", "onze", "doze", "treze", "quatorze",
+        "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"
+    ]
+    dezenas = [
+        "", "", "vinte", "trinta", "quarenta",
+        "cinquenta", "oitenta", "noventa"
+    ]
+    centenas = [
+        "", "cento", "duzentos", "trezentos", "quatrocentos",
+        "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"
+    ]
+    with open(nomeArquivo, "w", encoding="utf-8") as f:
+        #cabecalho da função gerada
+        f.write(f"def {nomeFuncao}():\n")
+        f.write(
+            f'    numero = int(input("Digite um número entre {minimo} e {maximo}: "))\n'
+        )
+        f.write(f"    if numero < {minimo} or numero > {maximo}:\n")
+        f.write('        print("Fora do intervalo permitido.")\n')
+        f.write("        return\n\n")
+        for i in range(minimo, maximo + 1):
+            #conversao para extenso
+            n = i
+            texto = ""
+            if n < 0:
+                texto += "menos "
+                n = -n
+            if n == 0:
+                texto += "zero"
+            elif n == 100:
+                texto += "cem"
+            else:
+                partes = []
+                c = n // 100
+                d = (n % 100) // 10
+                u = n % 10
+                if c > 0:
+                    partes.append(centenas[c])
+                if d == 1:
+                    partes.append(dezADezenove[u])
+                else:
+                    if d > 1:
+                        partes.append(dezenas[d])
+                    if u > 0:
+                        partes.append(unidades[u])
+                texto += " e ".join(partes)
+            #escrita do if/elif
+            if i == minimo:
+                f.write(f"    if numero == {i}:\n")
+            else:
+                f.write(f"    elif numero == {i}:\n")
+            f.write(f'        print("{texto}")\n')
+    print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")
+
 
 # 41.
 # Receba um número até 9 e escreva por extenso.
@@ -857,7 +975,7 @@ def n9ToExtenso2Func():
     if numero < 0 or numero > 9:
         print("Fora do intervalo permitido.")
     else:
-        print(numero_por_extenso(numero))
+        print(nPorExtenso(numero))
 
 # 42.
 # Receba um número até 99 e escreva por extenso.
@@ -1079,7 +1197,7 @@ def n99ToExtenso2Func():
     if numero < 0 or numero > 99:
         print("Fora do intervalo permitido.")
     else:
-        print(numero_por_extenso(numero))
+        print(nPorExtenso(numero))
 # 43.
 # Receba um número até 999 e escreva por extenso.
 
@@ -1088,23 +1206,2027 @@ def n999ToExtensoNum2Words():
     numero = int(input("Digite um número até 999: "))
     print(num2words(numero, lang='pt_BR'))
 
-
 def n999ToExtensoIfElse():
-    print("Digite um número até 999: ")
+    numero = int(input("Digite um número até 999: "))
+    if numero < 0 or numero > 999:
+        print("Fora do intervalo permitido.")
+        return
+
+    if numero == 0:
+        print("zero")
+    elif numero == 1:
+        print("um")
+    elif numero == 2:
+        print("dois")
+    elif numero == 3:
+        print("três")
+    elif numero == 4:
+        print("quatro")
+    elif numero == 5:
+        print("cinco")
+    elif numero == 6:
+        print("seis")
+    elif numero == 7:
+        print("sete")
+    elif numero == 8:
+        print("oito")
+    elif numero == 9:
+        print("nove")
+    elif numero == 10:
+        print("dez")
+    elif numero == 11:
+        print("onze")
+    elif numero == 12:
+        print("doze")
+    elif numero == 13:
+        print("treze")
+    elif numero == 14:
+        print("quatorze")
+    elif numero == 15:
+        print("quinze")
+    elif numero == 16:
+        print("dezesseis")
+    elif numero == 17:
+        print("dezessete")
+    elif numero == 18:
+        print("dezoito")
+    elif numero == 19:
+        print("dezenove")
+    elif numero == 20:
+        print("vinte")
+    elif numero == 21:
+        print("vinte e um")
+    elif numero == 22:
+        print("vinte e dois")
+    elif numero == 23:
+        print("vinte e três")
+    elif numero == 24:
+        print("vinte e quatro")
+    elif numero == 25:
+        print("vinte e cinco")
+    elif numero == 26:
+        print("vinte e seis")
+    elif numero == 27:
+        print("vinte e sete")
+    elif numero == 28:
+        print("vinte e oito")
+    elif numero == 29:
+        print("vinte e nove")
+    elif numero == 30:
+        print("trinta")
+    elif numero == 31:
+        print("trinta e um")
+    elif numero == 32:
+        print("trinta e dois")
+    elif numero == 33:
+        print("trinta e três")
+    elif numero == 34:
+        print("trinta e quatro")
+    elif numero == 35:
+        print("trinta e cinco")
+    elif numero == 36:
+        print("trinta e seis")
+    elif numero == 37:
+        print("trinta e sete")
+    elif numero == 38:
+        print("trinta e oito")
+    elif numero == 39:
+        print("trinta e nove")
+    elif numero == 40:
+        print("quarenta")
+    elif numero == 41:
+        print("quarenta e um")
+    elif numero == 42:
+        print("quarenta e dois")
+    elif numero == 43:
+        print("quarenta e três")
+    elif numero == 44:
+        print("quarenta e quatro")
+    elif numero == 45:
+        print("quarenta e cinco")
+    elif numero == 46:
+        print("quarenta e seis")
+    elif numero == 47:
+        print("quarenta e sete")
+    elif numero == 48:
+        print("quarenta e oito")
+    elif numero == 49:
+        print("quarenta e nove")
+    elif numero == 50:
+        print("cinquenta")
+    elif numero == 51:
+        print("cinquenta e um")
+    elif numero == 52:
+        print("cinquenta e dois")
+    elif numero == 53:
+        print("cinquenta e três")
+    elif numero == 54:
+        print("cinquenta e quatro")
+    elif numero == 55:
+        print("cinquenta e cinco")
+    elif numero == 56:
+        print("cinquenta e seis")
+    elif numero == 57:
+        print("cinquenta e sete")
+    elif numero == 58:
+        print("cinquenta e oito")
+    elif numero == 59:
+        print("cinquenta e nove")
+    elif numero == 60:
+        print("sessenta")
+    elif numero == 61:
+        print("sessenta e um")
+    elif numero == 62:
+        print("sessenta e dois")
+    elif numero == 63:
+        print("sessenta e três")
+    elif numero == 64:
+        print("sessenta e quatro")
+    elif numero == 65:
+        print("sessenta e cinco")
+    elif numero == 66:
+        print("sessenta e seis")
+    elif numero == 67:
+        print("sessenta e sete")
+    elif numero == 68:
+        print("sessenta e oito")
+    elif numero == 69:
+        print("sessenta e nove")
+    elif numero == 70:
+        print("setenta")
+    elif numero == 71:
+        print("setenta e um")
+    elif numero == 72:
+        print("setenta e dois")
+    elif numero == 73:
+        print("setenta e três")
+    elif numero == 74:
+        print("setenta e quatro")
+    elif numero == 75:
+        print("setenta e cinco")
+    elif numero == 76:
+        print("setenta e seis")
+    elif numero == 77:
+        print("setenta e sete")
+    elif numero == 78:
+        print("setenta e oito")
+    elif numero == 79:
+        print("setenta e nove")
+    elif numero == 80:
+        print("oitenta")
+    elif numero == 81:
+        print("oitenta e um")
+    elif numero == 82:
+        print("oitenta e dois")
+    elif numero == 83:
+        print("oitenta e três")
+    elif numero == 84:
+        print("oitenta e quatro")
+    elif numero == 85:
+        print("oitenta e cinco")
+    elif numero == 86:
+        print("oitenta e seis")
+    elif numero == 87:
+        print("oitenta e sete")
+    elif numero == 88:
+        print("oitenta e oito")
+    elif numero == 89:
+        print("oitenta e nove")
+    elif numero == 90:
+        print("noventa")
+    elif numero == 91:
+        print("noventa e um")
+    elif numero == 92:
+        print("noventa e dois")
+    elif numero == 93:
+        print("noventa e três")
+    elif numero == 94:
+        print("noventa e quatro")
+    elif numero == 95:
+        print("noventa e cinco")
+    elif numero == 96:
+        print("noventa e seis")
+    elif numero == 97:
+        print("noventa e sete")
+    elif numero == 98:
+        print("noventa e oito")
+    elif numero == 99:
+        print("noventa e nove")
+    elif numero == 100:
+        print("cem")
+    elif numero == 101:
+        print("cem e um")
+    elif numero == 102:
+        print("cem e dois")
+    elif numero == 103:
+        print("cem e três")
+    elif numero == 104:
+        print("cem e quatro")
+    elif numero == 105:
+        print("cem e cinco")
+    elif numero == 106:
+        print("cem e seis")
+    elif numero == 107:
+        print("cem e sete")
+    elif numero == 108:
+        print("cem e oito")
+    elif numero == 109:
+        print("cem e nove")
+    elif numero == 110:
+        print("cem e dez")
+    elif numero == 111:
+        print("cem e onze")
+    elif numero == 112:
+        print("cem e doze")
+    elif numero == 113:
+        print("cem e treze")
+    elif numero == 114:
+        print("cem e quatorze")
+    elif numero == 115:
+        print("cem e quinze")
+    elif numero == 116:
+        print("cem e dezesseis")
+    elif numero == 117:
+        print("cem e dezessete")
+    elif numero == 118:
+        print("cem e dezoito")
+    elif numero == 119:
+        print("cem e dezenove")
+    elif numero == 120:
+        print("cem e vinte")
+    elif numero == 121:
+        print("cem e vinte e um")
+    elif numero == 122:
+        print("cem e vinte e dois")
+    elif numero == 123:
+        print("cem e vinte e três")
+    elif numero == 124:
+        print("cem e vinte e quatro")
+    elif numero == 125:
+        print("cem e vinte e cinco")
+    elif numero == 126:
+        print("cem e vinte e seis")
+    elif numero == 127:
+        print("cem e vinte e sete")
+    elif numero == 128:
+        print("cem e vinte e oito")
+    elif numero == 129:
+        print("cem e vinte e nove")
+    elif numero == 130:
+        print("cem e trinta")
+    elif numero == 131:
+        print("cem e trinta e um")
+    elif numero == 132:
+        print("cem e trinta e dois")
+    elif numero == 133:
+        print("cem e trinta e três")
+    elif numero == 134:
+        print("cem e trinta e quatro")
+    elif numero == 135:
+        print("cem e trinta e cinco")
+    elif numero == 136:
+        print("cem e trinta e seis")
+    elif numero == 137:
+        print("cem e trinta e sete")
+    elif numero == 138:
+        print("cem e trinta e oito")
+    elif numero == 139:
+        print("cem e trinta e nove")
+    elif numero == 140:
+        print("cem e quarenta")
+    elif numero == 141:
+        print("cem e quarenta e um")
+    elif numero == 142:
+        print("cem e quarenta e dois")
+    elif numero == 143:
+        print("cem e quarenta e três")
+    elif numero == 144:
+        print("cem e quarenta e quatro")
+    elif numero == 145:
+        print("cem e quarenta e cinco")
+    elif numero == 146:
+        print("cem e quarenta e seis")
+    elif numero == 147:
+        print("cem e quarenta e sete")
+    elif numero == 148:
+        print("cem e quarenta e oito")
+    elif numero == 149:
+        print("cem e quarenta e nove")
+    elif numero == 150:
+        print("cem e cinquenta")
+    elif numero == 151:
+        print("cem e cinquenta e um")
+    elif numero == 152:
+        print("cem e cinquenta e dois")
+    elif numero == 153:
+        print("cem e cinquenta e três")
+    elif numero == 154:
+        print("cem e cinquenta e quatro")
+    elif numero == 155:
+        print("cem e cinquenta e cinco")
+    elif numero == 156:
+        print("cem e cinquenta e seis")
+    elif numero == 157:
+        print("cem e cinquenta e sete")
+    elif numero == 158:
+        print("cem e cinquenta e oito")
+    elif numero == 159:
+        print("cem e cinquenta e nove")
+    elif numero == 160:
+        print("cem e sessenta")
+    elif numero == 161:
+        print("cem e sessenta e um")
+    elif numero == 162:
+        print("cem e sessenta e dois")
+    elif numero == 163:
+        print("cem e sessenta e três")
+    elif numero == 164:
+        print("cem e sessenta e quatro")
+    elif numero == 165:
+        print("cem e sessenta e cinco")
+    elif numero == 166:
+        print("cem e sessenta e seis")
+    elif numero == 167:
+        print("cem e sessenta e sete")
+    elif numero == 168:
+        print("cem e sessenta e oito")
+    elif numero == 169:
+        print("cem e sessenta e nove")
+    elif numero == 170:
+        print("cem e setenta")
+    elif numero == 171:
+        print("cem e setenta e um")
+    elif numero == 172:
+        print("cem e setenta e dois")
+    elif numero == 173:
+        print("cem e setenta e três")
+    elif numero == 174:
+        print("cem e setenta e quatro")
+    elif numero == 175:
+        print("cem e setenta e cinco")
+    elif numero == 176:
+        print("cem e setenta e seis")
+    elif numero == 177:
+        print("cem e setenta e sete")
+    elif numero == 178:
+        print("cem e setenta e oito")
+    elif numero == 179:
+        print("cem e setenta e nove")
+    elif numero == 180:
+        print("cem e oitenta")
+    elif numero == 181:
+        print("cem e oitenta e um")
+    elif numero == 182:
+        print("cem e oitenta e dois")
+    elif numero == 183:
+        print("cem e oitenta e três")
+    elif numero == 184:
+        print("cem e oitenta e quatro")
+    elif numero == 185:
+        print("cem e oitenta e cinco")
+    elif numero == 186:
+        print("cem e oitenta e seis")
+    elif numero == 187:
+        print("cem e oitenta e sete")
+    elif numero == 188:
+        print("cem e oitenta e oito")
+    elif numero == 189:
+        print("cem e oitenta e nove")
+    elif numero == 190:
+        print("cem e noventa")
+    elif numero == 191:
+        print("cem e noventa e um")
+    elif numero == 192:
+        print("cem e noventa e dois")
+    elif numero == 193:
+        print("cem e noventa e três")
+    elif numero == 194:
+        print("cem e noventa e quatro")
+    elif numero == 195:
+        print("cem e noventa e cinco")
+    elif numero == 196:
+        print("cem e noventa e seis")
+    elif numero == 197:
+        print("cem e noventa e sete")
+    elif numero == 198:
+        print("cem e noventa e oito")
+    elif numero == 199:
+        print("cem e noventa e nove")
+    elif numero == 200:
+        print("duzentos")
+    elif numero == 201:
+        print("duzentos e um")
+    elif numero == 202:
+        print("duzentos e dois")
+    elif numero == 203:
+        print("duzentos e três")
+    elif numero == 204:
+        print("duzentos e quatro")
+    elif numero == 205:
+        print("duzentos e cinco")
+    elif numero == 206:
+        print("duzentos e seis")
+    elif numero == 207:
+        print("duzentos e sete")
+    elif numero == 208:
+        print("duzentos e oito")
+    elif numero == 209:
+        print("duzentos e nove")
+    elif numero == 210:
+        print("duzentos e dez")
+    elif numero == 211:
+        print("duzentos e onze")
+    elif numero == 212:
+        print("duzentos e doze")
+    elif numero == 213:
+        print("duzentos e treze")
+    elif numero == 214:
+        print("duzentos e quatorze")
+    elif numero == 215:
+        print("duzentos e quinze")
+    elif numero == 216:
+        print("duzentos e dezesseis")
+    elif numero == 217:
+        print("duzentos e dezessete")
+    elif numero == 218:
+        print("duzentos e dezoito")
+    elif numero == 219:
+        print("duzentos e dezenove")
+    elif numero == 220:
+        print("duzentos e vinte")
+    elif numero == 221:
+        print("duzentos e vinte e um")
+    elif numero == 222:
+        print("duzentos e vinte e dois")
+    elif numero == 223:
+        print("duzentos e vinte e três")
+    elif numero == 224:
+        print("duzentos e vinte e quatro")
+    elif numero == 225:
+        print("duzentos e vinte e cinco")
+    elif numero == 226:
+        print("duzentos e vinte e seis")
+    elif numero == 227:
+        print("duzentos e vinte e sete")
+    elif numero == 228:
+        print("duzentos e vinte e oito")
+    elif numero == 229:
+        print("duzentos e vinte e nove")
+    elif numero == 230:
+        print("duzentos e trinta")
+    elif numero == 231:
+        print("duzentos e trinta e um")
+    elif numero == 232:
+        print("duzentos e trinta e dois")
+    elif numero == 233:
+        print("duzentos e trinta e três")
+    elif numero == 234:
+        print("duzentos e trinta e quatro")
+    elif numero == 235:
+        print("duzentos e trinta e cinco")
+    elif numero == 236:
+        print("duzentos e trinta e seis")
+    elif numero == 237:
+        print("duzentos e trinta e sete")
+    elif numero == 238:
+        print("duzentos e trinta e oito")
+    elif numero == 239:
+        print("duzentos e trinta e nove")
+    elif numero == 240:
+        print("duzentos e quarenta")
+    elif numero == 241:
+        print("duzentos e quarenta e um")
+    elif numero == 242:
+        print("duzentos e quarenta e dois")
+    elif numero == 243:
+        print("duzentos e quarenta e três")
+    elif numero == 244:
+        print("duzentos e quarenta e quatro")
+    elif numero == 245:
+        print("duzentos e quarenta e cinco")
+    elif numero == 246:
+        print("duzentos e quarenta e seis")
+    elif numero == 247:
+        print("duzentos e quarenta e sete")
+    elif numero == 248:
+        print("duzentos e quarenta e oito")
+    elif numero == 249:
+        print("duzentos e quarenta e nove")
+    elif numero == 250:
+        print("duzentos e cinquenta")
+    elif numero == 251:
+        print("duzentos e cinquenta e um")
+    elif numero == 252:
+        print("duzentos e cinquenta e dois")
+    elif numero == 253:
+        print("duzentos e cinquenta e três")
+    elif numero == 254:
+        print("duzentos e cinquenta e quatro")
+    elif numero == 255:
+        print("duzentos e cinquenta e cinco")
+    elif numero == 256:
+        print("duzentos e cinquenta e seis")
+    elif numero == 257:
+        print("duzentos e cinquenta e sete")
+    elif numero == 258:
+        print("duzentos e cinquenta e oito")
+    elif numero == 259:
+        print("duzentos e cinquenta e nove")
+    elif numero == 260:
+        print("duzentos e sessenta")
+    elif numero == 261:
+        print("duzentos e sessenta e um")
+    elif numero == 262:
+        print("duzentos e sessenta e dois")
+    elif numero == 263:
+        print("duzentos e sessenta e três")
+    elif numero == 264:
+        print("duzentos e sessenta e quatro")
+    elif numero == 265:
+        print("duzentos e sessenta e cinco")
+    elif numero == 266:
+        print("duzentos e sessenta e seis")
+    elif numero == 267:
+        print("duzentos e sessenta e sete")
+    elif numero == 268:
+        print("duzentos e sessenta e oito")
+    elif numero == 269:
+        print("duzentos e sessenta e nove")
+    elif numero == 270:
+        print("duzentos e setenta")
+    elif numero == 271:
+        print("duzentos e setenta e um")
+    elif numero == 272:
+        print("duzentos e setenta e dois")
+    elif numero == 273:
+        print("duzentos e setenta e três")
+    elif numero == 274:
+        print("duzentos e setenta e quatro")
+    elif numero == 275:
+        print("duzentos e setenta e cinco")
+    elif numero == 276:
+        print("duzentos e setenta e seis")
+    elif numero == 277:
+        print("duzentos e setenta e sete")
+    elif numero == 278:
+        print("duzentos e setenta e oito")
+    elif numero == 279:
+        print("duzentos e setenta e nove")
+    elif numero == 280:
+        print("duzentos e oitenta")
+    elif numero == 281:
+        print("duzentos e oitenta e um")
+    elif numero == 282:
+        print("duzentos e oitenta e dois")
+    elif numero == 283:
+        print("duzentos e oitenta e três")
+    elif numero == 284:
+        print("duzentos e oitenta e quatro")
+    elif numero == 285:
+        print("duzentos e oitenta e cinco")
+    elif numero == 286:
+        print("duzentos e oitenta e seis")
+    elif numero == 287:
+        print("duzentos e oitenta e sete")
+    elif numero == 288:
+        print("duzentos e oitenta e oito")
+    elif numero == 289:
+        print("duzentos e oitenta e nove")
+    elif numero == 290:
+        print("duzentos e noventa")
+    elif numero == 291:
+        print("duzentos e noventa e um")
+    elif numero == 292:
+        print("duzentos e noventa e dois")
+    elif numero == 293:
+        print("duzentos e noventa e três")
+    elif numero == 294:
+        print("duzentos e noventa e quatro")
+    elif numero == 295:
+        print("duzentos e noventa e cinco")
+    elif numero == 296:
+        print("duzentos e noventa e seis")
+    elif numero == 297:
+        print("duzentos e noventa e sete")
+    elif numero == 298:
+        print("duzentos e noventa e oito")
+    elif numero == 299:
+        print("duzentos e noventa e nove")
+    elif numero == 300:
+        print("trezentos")
+    elif numero == 301:
+        print("trezentos e um")
+    elif numero == 302:
+        print("trezentos e dois")
+    elif numero == 303:
+        print("trezentos e três")
+    elif numero == 304:
+        print("trezentos e quatro")
+    elif numero == 305:
+        print("trezentos e cinco")
+    elif numero == 306:
+        print("trezentos e seis")
+    elif numero == 307:
+        print("trezentos e sete")
+    elif numero == 308:
+        print("trezentos e oito")
+    elif numero == 309:
+        print("trezentos e nove")
+    elif numero == 310:
+        print("trezentos e dez")
+    elif numero == 311:
+        print("trezentos e onze")
+    elif numero == 312:
+        print("trezentos e doze")
+    elif numero == 313:
+        print("trezentos e treze")
+    elif numero == 314:
+        print("trezentos e quatorze")
+    elif numero == 315:
+        print("trezentos e quinze")
+    elif numero == 316:
+        print("trezentos e dezesseis")
+    elif numero == 317:
+        print("trezentos e dezessete")
+    elif numero == 318:
+        print("trezentos e dezoito")
+    elif numero == 319:
+        print("trezentos e dezenove")
+    elif numero == 320:
+        print("trezentos e vinte")
+    elif numero == 321:
+        print("trezentos e vinte e um")
+    elif numero == 322:
+        print("trezentos e vinte e dois")
+    elif numero == 323:
+        print("trezentos e vinte e três")
+    elif numero == 324:
+        print("trezentos e vinte e quatro")
+    elif numero == 325:
+        print("trezentos e vinte e cinco")
+    elif numero == 326:
+        print("trezentos e vinte e seis")
+    elif numero == 327:
+        print("trezentos e vinte e sete")
+    elif numero == 328:
+        print("trezentos e vinte e oito")
+    elif numero == 329:
+        print("trezentos e vinte e nove")
+    elif numero == 330:
+        print("trezentos e trinta")
+    elif numero == 331:
+        print("trezentos e trinta e um")
+    elif numero == 332:
+        print("trezentos e trinta e dois")
+    elif numero == 333:
+        print("trezentos e trinta e três")
+    elif numero == 334:
+        print("trezentos e trinta e quatro")
+    elif numero == 335:
+        print("trezentos e trinta e cinco")
+    elif numero == 336:
+        print("trezentos e trinta e seis")
+    elif numero == 337:
+        print("trezentos e trinta e sete")
+    elif numero == 338:
+        print("trezentos e trinta e oito")
+    elif numero == 339:
+        print("trezentos e trinta e nove")
+    elif numero == 340:
+        print("trezentos e quarenta")
+    elif numero == 341:
+        print("trezentos e quarenta e um")
+    elif numero == 342:
+        print("trezentos e quarenta e dois")
+    elif numero == 343:
+        print("trezentos e quarenta e três")
+    elif numero == 344:
+        print("trezentos e quarenta e quatro")
+    elif numero == 345:
+        print("trezentos e quarenta e cinco")
+    elif numero == 346:
+        print("trezentos e quarenta e seis")
+    elif numero == 347:
+        print("trezentos e quarenta e sete")
+    elif numero == 348:
+        print("trezentos e quarenta e oito")
+    elif numero == 349:
+        print("trezentos e quarenta e nove")
+    elif numero == 350:
+        print("trezentos e cinquenta")
+    elif numero == 351:
+        print("trezentos e cinquenta e um")
+    elif numero == 352:
+        print("trezentos e cinquenta e dois")
+    elif numero == 353:
+        print("trezentos e cinquenta e três")
+    elif numero == 354:
+        print("trezentos e cinquenta e quatro")
+    elif numero == 355:
+        print("trezentos e cinquenta e cinco")
+    elif numero == 356:
+        print("trezentos e cinquenta e seis")
+    elif numero == 357:
+        print("trezentos e cinquenta e sete")
+    elif numero == 358:
+        print("trezentos e cinquenta e oito")
+    elif numero == 359:
+        print("trezentos e cinquenta e nove")
+    elif numero == 360:
+        print("trezentos e sessenta")
+    elif numero == 361:
+        print("trezentos e sessenta e um")
+    elif numero == 362:
+        print("trezentos e sessenta e dois")
+    elif numero == 363:
+        print("trezentos e sessenta e três")
+    elif numero == 364:
+        print("trezentos e sessenta e quatro")
+    elif numero == 365:
+        print("trezentos e sessenta e cinco")
+    elif numero == 366:
+        print("trezentos e sessenta e seis")
+    elif numero == 367:
+        print("trezentos e sessenta e sete")
+    elif numero == 368:
+        print("trezentos e sessenta e oito")
+    elif numero == 369:
+        print("trezentos e sessenta e nove")
+    elif numero == 370:
+        print("trezentos e setenta")
+    elif numero == 371:
+        print("trezentos e setenta e um")
+    elif numero == 372:
+        print("trezentos e setenta e dois")
+    elif numero == 373:
+        print("trezentos e setenta e três")
+    elif numero == 374:
+        print("trezentos e setenta e quatro")
+    elif numero == 375:
+        print("trezentos e setenta e cinco")
+    elif numero == 376:
+        print("trezentos e setenta e seis")
+    elif numero == 377:
+        print("trezentos e setenta e sete")
+    elif numero == 378:
+        print("trezentos e setenta e oito")
+    elif numero == 379:
+        print("trezentos e setenta e nove")
+    elif numero == 380:
+        print("trezentos e oitenta")
+    elif numero == 381:
+        print("trezentos e oitenta e um")
+    elif numero == 382:
+        print("trezentos e oitenta e dois")
+    elif numero == 383:
+        print("trezentos e oitenta e três")
+    elif numero == 384:
+        print("trezentos e oitenta e quatro")
+    elif numero == 385:
+        print("trezentos e oitenta e cinco")
+    elif numero == 386:
+        print("trezentos e oitenta e seis")
+    elif numero == 387:
+        print("trezentos e oitenta e sete")
+    elif numero == 388:
+        print("trezentos e oitenta e oito")
+    elif numero == 389:
+        print("trezentos e oitenta e nove")
+    elif numero == 390:
+        print("trezentos e noventa")
+    elif numero == 391:
+        print("trezentos e noventa e um")
+    elif numero == 392:
+        print("trezentos e noventa e dois")
+    elif numero == 393:
+        print("trezentos e noventa e três")
+    elif numero == 394:
+        print("trezentos e noventa e quatro")
+    elif numero == 395:
+        print("trezentos e noventa e cinco")
+    elif numero == 396:
+        print("trezentos e noventa e seis")
+    elif numero == 397:
+        print("trezentos e noventa e sete")
+    elif numero == 398:
+        print("trezentos e noventa e oito")
+    elif numero == 399:
+        print("trezentos e noventa e nove")
+    elif numero == 400:
+        print("quatrocentos")
+    elif numero == 401:
+        print("quatrocentos e um")
+    elif numero == 402:
+        print("quatrocentos e dois")
+    elif numero == 403:
+        print("quatrocentos e três")
+    elif numero == 404:
+        print("quatrocentos e quatro")
+    elif numero == 405:
+        print("quatrocentos e cinco")
+    elif numero == 406:
+        print("quatrocentos e seis")
+    elif numero == 407:
+        print("quatrocentos e sete")
+    elif numero == 408:
+        print("quatrocentos e oito")
+    elif numero == 409:
+        print("quatrocentos e nove")
+    elif numero == 410:
+        print("quatrocentos e dez")
+    elif numero == 411:
+        print("quatrocentos e onze")
+    elif numero == 412:
+        print("quatrocentos e doze")
+    elif numero == 413:
+        print("quatrocentos e treze")
+    elif numero == 414:
+        print("quatrocentos e quatorze")
+    elif numero == 415:
+        print("quatrocentos e quinze")
+    elif numero == 416:
+        print("quatrocentos e dezesseis")
+    elif numero == 417:
+        print("quatrocentos e dezessete")
+    elif numero == 418:
+        print("quatrocentos e dezoito")
+    elif numero == 419:
+        print("quatrocentos e dezenove")
+    elif numero == 420:
+        print("quatrocentos e vinte")
+    elif numero == 421:
+        print("quatrocentos e vinte e um")
+    elif numero == 422:
+        print("quatrocentos e vinte e dois")
+    elif numero == 423:
+        print("quatrocentos e vinte e três")
+    elif numero == 424:
+        print("quatrocentos e vinte e quatro")
+    elif numero == 425:
+        print("quatrocentos e vinte e cinco")
+    elif numero == 426:
+        print("quatrocentos e vinte e seis")
+    elif numero == 427:
+        print("quatrocentos e vinte e sete")
+    elif numero == 428:
+        print("quatrocentos e vinte e oito")
+    elif numero == 429:
+        print("quatrocentos e vinte e nove")
+    elif numero == 430:
+        print("quatrocentos e trinta")
+    elif numero == 431:
+        print("quatrocentos e trinta e um")
+    elif numero == 432:
+        print("quatrocentos e trinta e dois")
+    elif numero == 433:
+        print("quatrocentos e trinta e três")
+    elif numero == 434:
+        print("quatrocentos e trinta e quatro")
+    elif numero == 435:
+        print("quatrocentos e trinta e cinco")
+    elif numero == 436:
+        print("quatrocentos e trinta e seis")
+    elif numero == 437:
+        print("quatrocentos e trinta e sete")
+    elif numero == 438:
+        print("quatrocentos e trinta e oito")
+    elif numero == 439:
+        print("quatrocentos e trinta e nove")
+    elif numero == 440:
+        print("quatrocentos e quarenta")
+    elif numero == 441:
+        print("quatrocentos e quarenta e um")
+    elif numero == 442:
+        print("quatrocentos e quarenta e dois")
+    elif numero == 443:
+        print("quatrocentos e quarenta e três")
+    elif numero == 444:
+        print("quatrocentos e quarenta e quatro")
+    elif numero == 445:
+        print("quatrocentos e quarenta e cinco")
+    elif numero == 446:
+        print("quatrocentos e quarenta e seis")
+    elif numero == 447:
+        print("quatrocentos e quarenta e sete")
+    elif numero == 448:
+        print("quatrocentos e quarenta e oito")
+    elif numero == 449:
+        print("quatrocentos e quarenta e nove")
+    elif numero == 450:
+        print("quatrocentos e cinquenta")
+    elif numero == 451:
+        print("quatrocentos e cinquenta e um")
+    elif numero == 452:
+        print("quatrocentos e cinquenta e dois")
+    elif numero == 453:
+        print("quatrocentos e cinquenta e três")
+    elif numero == 454:
+        print("quatrocentos e cinquenta e quatro")
+    elif numero == 455:
+        print("quatrocentos e cinquenta e cinco")
+    elif numero == 456:
+        print("quatrocentos e cinquenta e seis")
+    elif numero == 457:
+        print("quatrocentos e cinquenta e sete")
+    elif numero == 458:
+        print("quatrocentos e cinquenta e oito")
+    elif numero == 459:
+        print("quatrocentos e cinquenta e nove")
+    elif numero == 460:
+        print("quatrocentos e sessenta")
+    elif numero == 461:
+        print("quatrocentos e sessenta e um")
+    elif numero == 462:
+        print("quatrocentos e sessenta e dois")
+    elif numero == 463:
+        print("quatrocentos e sessenta e três")
+    elif numero == 464:
+        print("quatrocentos e sessenta e quatro")
+    elif numero == 465:
+        print("quatrocentos e sessenta e cinco")
+    elif numero == 466:
+        print("quatrocentos e sessenta e seis")
+    elif numero == 467:
+        print("quatrocentos e sessenta e sete")
+    elif numero == 468:
+        print("quatrocentos e sessenta e oito")
+    elif numero == 469:
+        print("quatrocentos e sessenta e nove")
+    elif numero == 470:
+        print("quatrocentos e setenta")
+    elif numero == 471:
+        print("quatrocentos e setenta e um")
+    elif numero == 472:
+        print("quatrocentos e setenta e dois")
+    elif numero == 473:
+        print("quatrocentos e setenta e três")
+    elif numero == 474:
+        print("quatrocentos e setenta e quatro")
+    elif numero == 475:
+        print("quatrocentos e setenta e cinco")
+    elif numero == 476:
+        print("quatrocentos e setenta e seis")
+    elif numero == 477:
+        print("quatrocentos e setenta e sete")
+    elif numero == 478:
+        print("quatrocentos e setenta e oito")
+    elif numero == 479:
+        print("quatrocentos e setenta e nove")
+    elif numero == 480:
+        print("quatrocentos e oitenta")
+    elif numero == 481:
+        print("quatrocentos e oitenta e um")
+    elif numero == 482:
+        print("quatrocentos e oitenta e dois")
+    elif numero == 483:
+        print("quatrocentos e oitenta e três")
+    elif numero == 484:
+        print("quatrocentos e oitenta e quatro")
+    elif numero == 485:
+        print("quatrocentos e oitenta e cinco")
+    elif numero == 486:
+        print("quatrocentos e oitenta e seis")
+    elif numero == 487:
+        print("quatrocentos e oitenta e sete")
+    elif numero == 488:
+        print("quatrocentos e oitenta e oito")
+    elif numero == 489:
+        print("quatrocentos e oitenta e nove")
+    elif numero == 490:
+        print("quatrocentos e noventa")
+    elif numero == 491:
+        print("quatrocentos e noventa e um")
+    elif numero == 492:
+        print("quatrocentos e noventa e dois")
+    elif numero == 493:
+        print("quatrocentos e noventa e três")
+    elif numero == 494:
+        print("quatrocentos e noventa e quatro")
+    elif numero == 495:
+        print("quatrocentos e noventa e cinco")
+    elif numero == 496:
+        print("quatrocentos e noventa e seis")
+    elif numero == 497:
+        print("quatrocentos e noventa e sete")
+    elif numero == 498:
+        print("quatrocentos e noventa e oito")
+    elif numero == 499:
+        print("quatrocentos e noventa e nove")
+    elif numero == 500:
+        print("quinhentos")
+    elif numero == 501:
+        print("quinhentos e um")
+    elif numero == 502:
+        print("quinhentos e dois")
+    elif numero == 503:
+        print("quinhentos e três")
+    elif numero == 504:
+        print("quinhentos e quatro")
+    elif numero == 505:
+        print("quinhentos e cinco")
+    elif numero == 506:
+        print("quinhentos e seis")
+    elif numero == 507:
+        print("quinhentos e sete")
+    elif numero == 508:
+        print("quinhentos e oito")
+    elif numero == 509:
+        print("quinhentos e nove")
+    elif numero == 510:
+        print("quinhentos e dez")
+    elif numero == 511:
+        print("quinhentos e onze")
+    elif numero == 512:
+        print("quinhentos e doze")
+    elif numero == 513:
+        print("quinhentos e treze")
+    elif numero == 514:
+        print("quinhentos e quatorze")
+    elif numero == 515:
+        print("quinhentos e quinze")
+    elif numero == 516:
+        print("quinhentos e dezesseis")
+    elif numero == 517:
+        print("quinhentos e dezessete")
+    elif numero == 518:
+        print("quinhentos e dezoito")
+    elif numero == 519:
+        print("quinhentos e dezenove")
+    elif numero == 520:
+        print("quinhentos e vinte")
+    elif numero == 521:
+        print("quinhentos e vinte e um")
+    elif numero == 522:
+        print("quinhentos e vinte e dois")
+    elif numero == 523:
+        print("quinhentos e vinte e três")
+    elif numero == 524:
+        print("quinhentos e vinte e quatro")
+    elif numero == 525:
+        print("quinhentos e vinte e cinco")
+    elif numero == 526:
+        print("quinhentos e vinte e seis")
+    elif numero == 527:
+        print("quinhentos e vinte e sete")
+    elif numero == 528:
+        print("quinhentos e vinte e oito")
+    elif numero == 529:
+        print("quinhentos e vinte e nove")
+    elif numero == 530:
+        print("quinhentos e trinta")
+    elif numero == 531:
+        print("quinhentos e trinta e um")
+    elif numero == 532:
+        print("quinhentos e trinta e dois")
+    elif numero == 533:
+        print("quinhentos e trinta e três")
+    elif numero == 534:
+        print("quinhentos e trinta e quatro")
+    elif numero == 535:
+        print("quinhentos e trinta e cinco")
+    elif numero == 536:
+        print("quinhentos e trinta e seis")
+    elif numero == 537:
+        print("quinhentos e trinta e sete")
+    elif numero == 538:
+        print("quinhentos e trinta e oito")
+    elif numero == 539:
+        print("quinhentos e trinta e nove")
+    elif numero == 540:
+        print("quinhentos e quarenta")
+    elif numero == 541:
+        print("quinhentos e quarenta e um")
+    elif numero == 542:
+        print("quinhentos e quarenta e dois")
+    elif numero == 543:
+        print("quinhentos e quarenta e três")
+    elif numero == 544:
+        print("quinhentos e quarenta e quatro")
+    elif numero == 545:
+        print("quinhentos e quarenta e cinco")
+    elif numero == 546:
+        print("quinhentos e quarenta e seis")
+    elif numero == 547:
+        print("quinhentos e quarenta e sete")
+    elif numero == 548:
+        print("quinhentos e quarenta e oito")
+    elif numero == 549:
+        print("quinhentos e quarenta e nove")
+    elif numero == 550:
+        print("quinhentos e cinquenta")
+    elif numero == 551:
+        print("quinhentos e cinquenta e um")
+    elif numero == 552:
+        print("quinhentos e cinquenta e dois")
+    elif numero == 553:
+        print("quinhentos e cinquenta e três")
+    elif numero == 554:
+        print("quinhentos e cinquenta e quatro")
+    elif numero == 555:
+        print("quinhentos e cinquenta e cinco")
+    elif numero == 556:
+        print("quinhentos e cinquenta e seis")
+    elif numero == 557:
+        print("quinhentos e cinquenta e sete")
+    elif numero == 558:
+        print("quinhentos e cinquenta e oito")
+    elif numero == 559:
+        print("quinhentos e cinquenta e nove")
+    elif numero == 560:
+        print("quinhentos e sessenta")
+    elif numero == 561:
+        print("quinhentos e sessenta e um")
+    elif numero == 562:
+        print("quinhentos e sessenta e dois")
+    elif numero == 563:
+        print("quinhentos e sessenta e três")
+    elif numero == 564:
+        print("quinhentos e sessenta e quatro")
+    elif numero == 565:
+        print("quinhentos e sessenta e cinco")
+    elif numero == 566:
+        print("quinhentos e sessenta e seis")
+    elif numero == 567:
+        print("quinhentos e sessenta e sete")
+    elif numero == 568:
+        print("quinhentos e sessenta e oito")
+    elif numero == 569:
+        print("quinhentos e sessenta e nove")
+    elif numero == 570:
+        print("quinhentos e setenta")
+    elif numero == 571:
+        print("quinhentos e setenta e um")
+    elif numero == 572:
+        print("quinhentos e setenta e dois")
+    elif numero == 573:
+        print("quinhentos e setenta e três")
+    elif numero == 574:
+        print("quinhentos e setenta e quatro")
+    elif numero == 575:
+        print("quinhentos e setenta e cinco")
+    elif numero == 576:
+        print("quinhentos e setenta e seis")
+    elif numero == 577:
+        print("quinhentos e setenta e sete")
+    elif numero == 578:
+        print("quinhentos e setenta e oito")
+    elif numero == 579:
+        print("quinhentos e setenta e nove")
+    elif numero == 580:
+        print("quinhentos e oitenta")
+    elif numero == 581:
+        print("quinhentos e oitenta e um")
+    elif numero == 582:
+        print("quinhentos e oitenta e dois")
+    elif numero == 583:
+        print("quinhentos e oitenta e três")
+    elif numero == 584:
+        print("quinhentos e oitenta e quatro")
+    elif numero == 585:
+        print("quinhentos e oitenta e cinco")
+    elif numero == 586:
+        print("quinhentos e oitenta e seis")
+    elif numero == 587:
+        print("quinhentos e oitenta e sete")
+    elif numero == 588:
+        print("quinhentos e oitenta e oito")
+    elif numero == 589:
+        print("quinhentos e oitenta e nove")
+    elif numero == 590:
+        print("quinhentos e noventa")
+    elif numero == 591:
+        print("quinhentos e noventa e um")
+    elif numero == 592:
+        print("quinhentos e noventa e dois")
+    elif numero == 593:
+        print("quinhentos e noventa e três")
+    elif numero == 594:
+        print("quinhentos e noventa e quatro")
+    elif numero == 595:
+        print("quinhentos e noventa e cinco")
+    elif numero == 596:
+        print("quinhentos e noventa e seis")
+    elif numero == 597:
+        print("quinhentos e noventa e sete")
+    elif numero == 598:
+        print("quinhentos e noventa e oito")
+    elif numero == 599:
+        print("quinhentos e noventa e nove")
+    elif numero == 600:
+        print("seiscentos")
+    elif numero == 601:
+        print("seiscentos e um")
+    elif numero == 602:
+        print("seiscentos e dois")
+    elif numero == 603:
+        print("seiscentos e três")
+    elif numero == 604:
+        print("seiscentos e quatro")
+    elif numero == 605:
+        print("seiscentos e cinco")
+    elif numero == 606:
+        print("seiscentos e seis")
+    elif numero == 607:
+        print("seiscentos e sete")
+    elif numero == 608:
+        print("seiscentos e oito")
+    elif numero == 609:
+        print("seiscentos e nove")
+    elif numero == 610:
+        print("seiscentos e dez")
+    elif numero == 611:
+        print("seiscentos e onze")
+    elif numero == 612:
+        print("seiscentos e doze")
+    elif numero == 613:
+        print("seiscentos e treze")
+    elif numero == 614:
+        print("seiscentos e quatorze")
+    elif numero == 615:
+        print("seiscentos e quinze")
+    elif numero == 616:
+        print("seiscentos e dezesseis")
+    elif numero == 617:
+        print("seiscentos e dezessete")
+    elif numero == 618:
+        print("seiscentos e dezoito")
+    elif numero == 619:
+        print("seiscentos e dezenove")
+    elif numero == 620:
+        print("seiscentos e vinte")
+    elif numero == 621:
+        print("seiscentos e vinte e um")
+    elif numero == 622:
+        print("seiscentos e vinte e dois")
+    elif numero == 623:
+        print("seiscentos e vinte e três")
+    elif numero == 624:
+        print("seiscentos e vinte e quatro")
+    elif numero == 625:
+        print("seiscentos e vinte e cinco")
+    elif numero == 626:
+        print("seiscentos e vinte e seis")
+    elif numero == 627:
+        print("seiscentos e vinte e sete")
+    elif numero == 628:
+        print("seiscentos e vinte e oito")
+    elif numero == 629:
+        print("seiscentos e vinte e nove")
+    elif numero == 630:
+        print("seiscentos e trinta")
+    elif numero == 631:
+        print("seiscentos e trinta e um")
+    elif numero == 632:
+        print("seiscentos e trinta e dois")
+    elif numero == 633:
+        print("seiscentos e trinta e três")
+    elif numero == 634:
+        print("seiscentos e trinta e quatro")
+    elif numero == 635:
+        print("seiscentos e trinta e cinco")
+    elif numero == 636:
+        print("seiscentos e trinta e seis")
+    elif numero == 637:
+        print("seiscentos e trinta e sete")
+    elif numero == 638:
+        print("seiscentos e trinta e oito")
+    elif numero == 639:
+        print("seiscentos e trinta e nove")
+    elif numero == 640:
+        print("seiscentos e quarenta")
+    elif numero == 641:
+        print("seiscentos e quarenta e um")
+    elif numero == 642:
+        print("seiscentos e quarenta e dois")
+    elif numero == 643:
+        print("seiscentos e quarenta e três")
+    elif numero == 644:
+        print("seiscentos e quarenta e quatro")
+    elif numero == 645:
+        print("seiscentos e quarenta e cinco")
+    elif numero == 646:
+        print("seiscentos e quarenta e seis")
+    elif numero == 647:
+        print("seiscentos e quarenta e sete")
+    elif numero == 648:
+        print("seiscentos e quarenta e oito")
+    elif numero == 649:
+        print("seiscentos e quarenta e nove")
+    elif numero == 650:
+        print("seiscentos e cinquenta")
+    elif numero == 651:
+        print("seiscentos e cinquenta e um")
+    elif numero == 652:
+        print("seiscentos e cinquenta e dois")
+    elif numero == 653:
+        print("seiscentos e cinquenta e três")
+    elif numero == 654:
+        print("seiscentos e cinquenta e quatro")
+    elif numero == 655:
+        print("seiscentos e cinquenta e cinco")
+    elif numero == 656:
+        print("seiscentos e cinquenta e seis")
+    elif numero == 657:
+        print("seiscentos e cinquenta e sete")
+    elif numero == 658:
+        print("seiscentos e cinquenta e oito")
+    elif numero == 659:
+        print("seiscentos e cinquenta e nove")
+    elif numero == 660:
+        print("seiscentos e sessenta")
+    elif numero == 661:
+        print("seiscentos e sessenta e um")
+    elif numero == 662:
+        print("seiscentos e sessenta e dois")
+    elif numero == 663:
+        print("seiscentos e sessenta e três")
+    elif numero == 664:
+        print("seiscentos e sessenta e quatro")
+    elif numero == 665:
+        print("seiscentos e sessenta e cinco")
+    elif numero == 666:
+        print("seiscentos e sessenta e seis")
+    elif numero == 667:
+        print("seiscentos e sessenta e sete")
+    elif numero == 668:
+        print("seiscentos e sessenta e oito")
+    elif numero == 669:
+        print("seiscentos e sessenta e nove")
+    elif numero == 670:
+        print("seiscentos e setenta")
+    elif numero == 671:
+        print("seiscentos e setenta e um")
+    elif numero == 672:
+        print("seiscentos e setenta e dois")
+    elif numero == 673:
+        print("seiscentos e setenta e três")
+    elif numero == 674:
+        print("seiscentos e setenta e quatro")
+    elif numero == 675:
+        print("seiscentos e setenta e cinco")
+    elif numero == 676:
+        print("seiscentos e setenta e seis")
+    elif numero == 677:
+        print("seiscentos e setenta e sete")
+    elif numero == 678:
+        print("seiscentos e setenta e oito")
+    elif numero == 679:
+        print("seiscentos e setenta e nove")
+    elif numero == 680:
+        print("seiscentos e oitenta")
+    elif numero == 681:
+        print("seiscentos e oitenta e um")
+    elif numero == 682:
+        print("seiscentos e oitenta e dois")
+    elif numero == 683:
+        print("seiscentos e oitenta e três")
+    elif numero == 684:
+        print("seiscentos e oitenta e quatro")
+    elif numero == 685:
+        print("seiscentos e oitenta e cinco")
+    elif numero == 686:
+        print("seiscentos e oitenta e seis")
+    elif numero == 687:
+        print("seiscentos e oitenta e sete")
+    elif numero == 688:
+        print("seiscentos e oitenta e oito")
+    elif numero == 689:
+        print("seiscentos e oitenta e nove")
+    elif numero == 690:
+        print("seiscentos e noventa")
+    elif numero == 691:
+        print("seiscentos e noventa e um")
+    elif numero == 692:
+        print("seiscentos e noventa e dois")
+    elif numero == 693:
+        print("seiscentos e noventa e três")
+    elif numero == 694:
+        print("seiscentos e noventa e quatro")
+    elif numero == 695:
+        print("seiscentos e noventa e cinco")
+    elif numero == 696:
+        print("seiscentos e noventa e seis")
+    elif numero == 697:
+        print("seiscentos e noventa e sete")
+    elif numero == 698:
+        print("seiscentos e noventa e oito")
+    elif numero == 699:
+        print("seiscentos e noventa e nove")
+    elif numero == 700:
+        print("setecentos")
+    elif numero == 701:
+        print("setecentos e um")
+    elif numero == 702:
+        print("setecentos e dois")
+    elif numero == 703:
+        print("setecentos e três")
+    elif numero == 704:
+        print("setecentos e quatro")
+    elif numero == 705:
+        print("setecentos e cinco")
+    elif numero == 706:
+        print("setecentos e seis")
+    elif numero == 707:
+        print("setecentos e sete")
+    elif numero == 708:
+        print("setecentos e oito")
+    elif numero == 709:
+        print("setecentos e nove")
+    elif numero == 710:
+        print("setecentos e dez")
+    elif numero == 711:
+        print("setecentos e onze")
+    elif numero == 712:
+        print("setecentos e doze")
+    elif numero == 713:
+        print("setecentos e treze")
+    elif numero == 714:
+        print("setecentos e quatorze")
+    elif numero == 715:
+        print("setecentos e quinze")
+    elif numero == 716:
+        print("setecentos e dezesseis")
+    elif numero == 717:
+        print("setecentos e dezessete")
+    elif numero == 718:
+        print("setecentos e dezoito")
+    elif numero == 719:
+        print("setecentos e dezenove")
+    elif numero == 720:
+        print("setecentos e vinte")
+    elif numero == 721:
+        print("setecentos e vinte e um")
+    elif numero == 722:
+        print("setecentos e vinte e dois")
+    elif numero == 723:
+        print("setecentos e vinte e três")
+    elif numero == 724:
+        print("setecentos e vinte e quatro")
+    elif numero == 725:
+        print("setecentos e vinte e cinco")
+    elif numero == 726:
+        print("setecentos e vinte e seis")
+    elif numero == 727:
+        print("setecentos e vinte e sete")
+    elif numero == 728:
+        print("setecentos e vinte e oito")
+    elif numero == 729:
+        print("setecentos e vinte e nove")
+    elif numero == 730:
+        print("setecentos e trinta")
+    elif numero == 731:
+        print("setecentos e trinta e um")
+    elif numero == 732:
+        print("setecentos e trinta e dois")
+    elif numero == 733:
+        print("setecentos e trinta e três")
+    elif numero == 734:
+        print("setecentos e trinta e quatro")
+    elif numero == 735:
+        print("setecentos e trinta e cinco")
+    elif numero == 736:
+        print("setecentos e trinta e seis")
+    elif numero == 737:
+        print("setecentos e trinta e sete")
+    elif numero == 738:
+        print("setecentos e trinta e oito")
+    elif numero == 739:
+        print("setecentos e trinta e nove")
+    elif numero == 740:
+        print("setecentos e quarenta")
+    elif numero == 741:
+        print("setecentos e quarenta e um")
+    elif numero == 742:
+        print("setecentos e quarenta e dois")
+    elif numero == 743:
+        print("setecentos e quarenta e três")
+    elif numero == 744:
+        print("setecentos e quarenta e quatro")
+    elif numero == 745:
+        print("setecentos e quarenta e cinco")
+    elif numero == 746:
+        print("setecentos e quarenta e seis")
+    elif numero == 747:
+        print("setecentos e quarenta e sete")
+    elif numero == 748:
+        print("setecentos e quarenta e oito")
+    elif numero == 749:
+        print("setecentos e quarenta e nove")
+    elif numero == 750:
+        print("setecentos e cinquenta")
+    elif numero == 751:
+        print("setecentos e cinquenta e um")
+    elif numero == 752:
+        print("setecentos e cinquenta e dois")
+    elif numero == 753:
+        print("setecentos e cinquenta e três")
+    elif numero == 754:
+        print("setecentos e cinquenta e quatro")
+    elif numero == 755:
+        print("setecentos e cinquenta e cinco")
+    elif numero == 756:
+        print("setecentos e cinquenta e seis")
+    elif numero == 757:
+        print("setecentos e cinquenta e sete")
+    elif numero == 758:
+        print("setecentos e cinquenta e oito")
+    elif numero == 759:
+        print("setecentos e cinquenta e nove")
+    elif numero == 760:
+        print("setecentos e sessenta")
+    elif numero == 761:
+        print("setecentos e sessenta e um")
+    elif numero == 762:
+        print("setecentos e sessenta e dois")
+    elif numero == 763:
+        print("setecentos e sessenta e três")
+    elif numero == 764:
+        print("setecentos e sessenta e quatro")
+    elif numero == 765:
+        print("setecentos e sessenta e cinco")
+    elif numero == 766:
+        print("setecentos e sessenta e seis")
+    elif numero == 767:
+        print("setecentos e sessenta e sete")
+    elif numero == 768:
+        print("setecentos e sessenta e oito")
+    elif numero == 769:
+        print("setecentos e sessenta e nove")
+    elif numero == 770:
+        print("setecentos e setenta")
+    elif numero == 771:
+        print("setecentos e setenta e um")
+    elif numero == 772:
+        print("setecentos e setenta e dois")
+    elif numero == 773:
+        print("setecentos e setenta e três")
+    elif numero == 774:
+        print("setecentos e setenta e quatro")
+    elif numero == 775:
+        print("setecentos e setenta e cinco")
+    elif numero == 776:
+        print("setecentos e setenta e seis")
+    elif numero == 777:
+        print("setecentos e setenta e sete")
+    elif numero == 778:
+        print("setecentos e setenta e oito")
+    elif numero == 779:
+        print("setecentos e setenta e nove")
+    elif numero == 780:
+        print("setecentos e oitenta")
+    elif numero == 781:
+        print("setecentos e oitenta e um")
+    elif numero == 782:
+        print("setecentos e oitenta e dois")
+    elif numero == 783:
+        print("setecentos e oitenta e três")
+    elif numero == 784:
+        print("setecentos e oitenta e quatro")
+    elif numero == 785:
+        print("setecentos e oitenta e cinco")
+    elif numero == 786:
+        print("setecentos e oitenta e seis")
+    elif numero == 787:
+        print("setecentos e oitenta e sete")
+    elif numero == 788:
+        print("setecentos e oitenta e oito")
+    elif numero == 789:
+        print("setecentos e oitenta e nove")
+    elif numero == 790:
+        print("setecentos e noventa")
+    elif numero == 791:
+        print("setecentos e noventa e um")
+    elif numero == 792:
+        print("setecentos e noventa e dois")
+    elif numero == 793:
+        print("setecentos e noventa e três")
+    elif numero == 794:
+        print("setecentos e noventa e quatro")
+    elif numero == 795:
+        print("setecentos e noventa e cinco")
+    elif numero == 796:
+        print("setecentos e noventa e seis")
+    elif numero == 797:
+        print("setecentos e noventa e sete")
+    elif numero == 798:
+        print("setecentos e noventa e oito")
+    elif numero == 799:
+        print("setecentos e noventa e nove")
+    elif numero == 800:
+        print("oitocentos")
+    elif numero == 801:
+        print("oitocentos e um")
+    elif numero == 802:
+        print("oitocentos e dois")
+    elif numero == 803:
+        print("oitocentos e três")
+    elif numero == 804:
+        print("oitocentos e quatro")
+    elif numero == 805:
+        print("oitocentos e cinco")
+    elif numero == 806:
+        print("oitocentos e seis")
+    elif numero == 807:
+        print("oitocentos e sete")
+    elif numero == 808:
+        print("oitocentos e oito")
+    elif numero == 809:
+        print("oitocentos e nove")
+    elif numero == 810:
+        print("oitocentos e dez")
+    elif numero == 811:
+        print("oitocentos e onze")
+    elif numero == 812:
+        print("oitocentos e doze")
+    elif numero == 813:
+        print("oitocentos e treze")
+    elif numero == 814:
+        print("oitocentos e quatorze")
+    elif numero == 815:
+        print("oitocentos e quinze")
+    elif numero == 816:
+        print("oitocentos e dezesseis")
+    elif numero == 817:
+        print("oitocentos e dezessete")
+    elif numero == 818:
+        print("oitocentos e dezoito")
+    elif numero == 819:
+        print("oitocentos e dezenove")
+    elif numero == 820:
+        print("oitocentos e vinte")
+    elif numero == 821:
+        print("oitocentos e vinte e um")
+    elif numero == 822:
+        print("oitocentos e vinte e dois")
+    elif numero == 823:
+        print("oitocentos e vinte e três")
+    elif numero == 824:
+        print("oitocentos e vinte e quatro")
+    elif numero == 825:
+        print("oitocentos e vinte e cinco")
+    elif numero == 826:
+        print("oitocentos e vinte e seis")
+    elif numero == 827:
+        print("oitocentos e vinte e sete")
+    elif numero == 828:
+        print("oitocentos e vinte e oito")
+    elif numero == 829:
+        print("oitocentos e vinte e nove")
+    elif numero == 830:
+        print("oitocentos e trinta")
+    elif numero == 831:
+        print("oitocentos e trinta e um")
+    elif numero == 832:
+        print("oitocentos e trinta e dois")
+    elif numero == 833:
+        print("oitocentos e trinta e três")
+    elif numero == 834:
+        print("oitocentos e trinta e quatro")
+    elif numero == 835:
+        print("oitocentos e trinta e cinco")
+    elif numero == 836:
+        print("oitocentos e trinta e seis")
+    elif numero == 837:
+        print("oitocentos e trinta e sete")
+    elif numero == 838:
+        print("oitocentos e trinta e oito")
+    elif numero == 839:
+        print("oitocentos e trinta e nove")
+    elif numero == 840:
+        print("oitocentos e quarenta")
+    elif numero == 841:
+        print("oitocentos e quarenta e um")
+    elif numero == 842:
+        print("oitocentos e quarenta e dois")
+    elif numero == 843:
+        print("oitocentos e quarenta e três")
+    elif numero == 844:
+        print("oitocentos e quarenta e quatro")
+    elif numero == 845:
+        print("oitocentos e quarenta e cinco")
+    elif numero == 846:
+        print("oitocentos e quarenta e seis")
+    elif numero == 847:
+        print("oitocentos e quarenta e sete")
+    elif numero == 848:
+        print("oitocentos e quarenta e oito")
+    elif numero == 849:
+        print("oitocentos e quarenta e nove")
+    elif numero == 850:
+        print("oitocentos e cinquenta")
+    elif numero == 851:
+        print("oitocentos e cinquenta e um")
+    elif numero == 852:
+        print("oitocentos e cinquenta e dois")
+    elif numero == 853:
+        print("oitocentos e cinquenta e três")
+    elif numero == 854:
+        print("oitocentos e cinquenta e quatro")
+    elif numero == 855:
+        print("oitocentos e cinquenta e cinco")
+    elif numero == 856:
+        print("oitocentos e cinquenta e seis")
+    elif numero == 857:
+        print("oitocentos e cinquenta e sete")
+    elif numero == 858:
+        print("oitocentos e cinquenta e oito")
+    elif numero == 859:
+        print("oitocentos e cinquenta e nove")
+    elif numero == 860:
+        print("oitocentos e sessenta")
+    elif numero == 861:
+        print("oitocentos e sessenta e um")
+    elif numero == 862:
+        print("oitocentos e sessenta e dois")
+    elif numero == 863:
+        print("oitocentos e sessenta e três")
+    elif numero == 864:
+        print("oitocentos e sessenta e quatro")
+    elif numero == 865:
+        print("oitocentos e sessenta e cinco")
+    elif numero == 866:
+        print("oitocentos e sessenta e seis")
+    elif numero == 867:
+        print("oitocentos e sessenta e sete")
+    elif numero == 868:
+        print("oitocentos e sessenta e oito")
+    elif numero == 869:
+        print("oitocentos e sessenta e nove")
+    elif numero == 870:
+        print("oitocentos e setenta")
+    elif numero == 871:
+        print("oitocentos e setenta e um")
+    elif numero == 872:
+        print("oitocentos e setenta e dois")
+    elif numero == 873:
+        print("oitocentos e setenta e três")
+    elif numero == 874:
+        print("oitocentos e setenta e quatro")
+    elif numero == 875:
+        print("oitocentos e setenta e cinco")
+    elif numero == 876:
+        print("oitocentos e setenta e seis")
+    elif numero == 877:
+        print("oitocentos e setenta e sete")
+    elif numero == 878:
+        print("oitocentos e setenta e oito")
+    elif numero == 879:
+        print("oitocentos e setenta e nove")
+    elif numero == 880:
+        print("oitocentos e oitenta")
+    elif numero == 881:
+        print("oitocentos e oitenta e um")
+    elif numero == 882:
+        print("oitocentos e oitenta e dois")
+    elif numero == 883:
+        print("oitocentos e oitenta e três")
+    elif numero == 884:
+        print("oitocentos e oitenta e quatro")
+    elif numero == 885:
+        print("oitocentos e oitenta e cinco")
+    elif numero == 886:
+        print("oitocentos e oitenta e seis")
+    elif numero == 887:
+        print("oitocentos e oitenta e sete")
+    elif numero == 888:
+        print("oitocentos e oitenta e oito")
+    elif numero == 889:
+        print("oitocentos e oitenta e nove")
+    elif numero == 890:
+        print("oitocentos e noventa")
+    elif numero == 891:
+        print("oitocentos e noventa e um")
+    elif numero == 892:
+        print("oitocentos e noventa e dois")
+    elif numero == 893:
+        print("oitocentos e noventa e três")
+    elif numero == 894:
+        print("oitocentos e noventa e quatro")
+    elif numero == 895:
+        print("oitocentos e noventa e cinco")
+    elif numero == 896:
+        print("oitocentos e noventa e seis")
+    elif numero == 897:
+        print("oitocentos e noventa e sete")
+    elif numero == 898:
+        print("oitocentos e noventa e oito")
+    elif numero == 899:
+        print("oitocentos e noventa e nove")
+    elif numero == 900:
+        print("novecentos")
+    elif numero == 901:
+        print("novecentos e um")
+    elif numero == 902:
+        print("novecentos e dois")
+    elif numero == 903:
+        print("novecentos e três")
+    elif numero == 904:
+        print("novecentos e quatro")
+    elif numero == 905:
+        print("novecentos e cinco")
+    elif numero == 906:
+        print("novecentos e seis")
+    elif numero == 907:
+        print("novecentos e sete")
+    elif numero == 908:
+        print("novecentos e oito")
+    elif numero == 909:
+        print("novecentos e nove")
+    elif numero == 910:
+        print("novecentos e dez")
+    elif numero == 911:
+        print("novecentos e onze")
+    elif numero == 912:
+        print("novecentos e doze")
+    elif numero == 913:
+        print("novecentos e treze")
+    elif numero == 914:
+        print("novecentos e quatorze")
+    elif numero == 915:
+        print("novecentos e quinze")
+    elif numero == 916:
+        print("novecentos e dezesseis")
+    elif numero == 917:
+        print("novecentos e dezessete")
+    elif numero == 918:
+        print("novecentos e dezoito")
+    elif numero == 919:
+        print("novecentos e dezenove")
+    elif numero == 920:
+        print("novecentos e vinte")
+    elif numero == 921:
+        print("novecentos e vinte e um")
+    elif numero == 922:
+        print("novecentos e vinte e dois")
+    elif numero == 923:
+        print("novecentos e vinte e três")
+    elif numero == 924:
+        print("novecentos e vinte e quatro")
+    elif numero == 925:
+        print("novecentos e vinte e cinco")
+    elif numero == 926:
+        print("novecentos e vinte e seis")
+    elif numero == 927:
+        print("novecentos e vinte e sete")
+    elif numero == 928:
+        print("novecentos e vinte e oito")
+    elif numero == 929:
+        print("novecentos e vinte e nove")
+    elif numero == 930:
+        print("novecentos e trinta")
+    elif numero == 931:
+        print("novecentos e trinta e um")
+    elif numero == 932:
+        print("novecentos e trinta e dois")
+    elif numero == 933:
+        print("novecentos e trinta e três")
+    elif numero == 934:
+        print("novecentos e trinta e quatro")
+    elif numero == 935:
+        print("novecentos e trinta e cinco")
+    elif numero == 936:
+        print("novecentos e trinta e seis")
+    elif numero == 937:
+        print("novecentos e trinta e sete")
+    elif numero == 938:
+        print("novecentos e trinta e oito")
+    elif numero == 939:
+        print("novecentos e trinta e nove")
+    elif numero == 940:
+        print("novecentos e quarenta")
+    elif numero == 941:
+        print("novecentos e quarenta e um")
+    elif numero == 942:
+        print("novecentos e quarenta e dois")
+    elif numero == 943:
+        print("novecentos e quarenta e três")
+    elif numero == 944:
+        print("novecentos e quarenta e quatro")
+    elif numero == 945:
+        print("novecentos e quarenta e cinco")
+    elif numero == 946:
+        print("novecentos e quarenta e seis")
+    elif numero == 947:
+        print("novecentos e quarenta e sete")
+    elif numero == 948:
+        print("novecentos e quarenta e oito")
+    elif numero == 949:
+        print("novecentos e quarenta e nove")
+    elif numero == 950:
+        print("novecentos e cinquenta")
+    elif numero == 951:
+        print("novecentos e cinquenta e um")
+    elif numero == 952:
+        print("novecentos e cinquenta e dois")
+    elif numero == 953:
+        print("novecentos e cinquenta e três")
+    elif numero == 954:
+        print("novecentos e cinquenta e quatro")
+    elif numero == 955:
+        print("novecentos e cinquenta e cinco")
+    elif numero == 956:
+        print("novecentos e cinquenta e seis")
+    elif numero == 957:
+        print("novecentos e cinquenta e sete")
+    elif numero == 958:
+        print("novecentos e cinquenta e oito")
+    elif numero == 959:
+        print("novecentos e cinquenta e nove")
+    elif numero == 960:
+        print("novecentos e sessenta")
+    elif numero == 961:
+        print("novecentos e sessenta e um")
+    elif numero == 962:
+        print("novecentos e sessenta e dois")
+    elif numero == 963:
+        print("novecentos e sessenta e três")
+    elif numero == 964:
+        print("novecentos e sessenta e quatro")
+    elif numero == 965:
+        print("novecentos e sessenta e cinco")
+    elif numero == 966:
+        print("novecentos e sessenta e seis")
+    elif numero == 967:
+        print("novecentos e sessenta e sete")
+    elif numero == 968:
+        print("novecentos e sessenta e oito")
+    elif numero == 969:
+        print("novecentos e sessenta e nove")
+    elif numero == 970:
+        print("novecentos e setenta")
+    elif numero == 971:
+        print("novecentos e setenta e um")
+    elif numero == 972:
+        print("novecentos e setenta e dois")
+    elif numero == 973:
+        print("novecentos e setenta e três")
+    elif numero == 974:
+        print("novecentos e setenta e quatro")
+    elif numero == 975:
+        print("novecentos e setenta e cinco")
+    elif numero == 976:
+        print("novecentos e setenta e seis")
+    elif numero == 977:
+        print("novecentos e setenta e sete")
+    elif numero == 978:
+        print("novecentos e setenta e oito")
+    elif numero == 979:
+        print("novecentos e setenta e nove")
+    elif numero == 980:
+        print("novecentos e oitenta")
+    elif numero == 981:
+        print("novecentos e oitenta e um")
+    elif numero == 982:
+        print("novecentos e oitenta e dois")
+    elif numero == 983:
+        print("novecentos e oitenta e três")
+    elif numero == 984:
+        print("novecentos e oitenta e quatro")
+    elif numero == 985:
+        print("novecentos e oitenta e cinco")
+    elif numero == 986:
+        print("novecentos e oitenta e seis")
+    elif numero == 987:
+        print("novecentos e oitenta e sete")
+    elif numero == 988:
+        print("novecentos e oitenta e oito")
+    elif numero == 989:
+        print("novecentos e oitenta e nove")
+    elif numero == 990:
+        print("novecentos e noventa")
+    elif numero == 991:
+        print("novecentos e noventa e um")
+    elif numero == 992:
+        print("novecentos e noventa e dois")
+    elif numero == 993:
+        print("novecentos e noventa e três")
+    elif numero == 994:
+        print("novecentos e noventa e quatro")
+    elif numero == 995:
+        print("novecentos e noventa e cinco")
+    elif numero == 996:
+        print("novecentos e noventa e seis")
+    elif numero == 997:
+        print("novecentos e noventa e sete")
+    elif numero == 998:
+        print("novecentos e noventa e oito")
+    elif numero == 999:
+        print("novecentos e noventa e nove")
+
 
 def n98ToExtenso2Func():
     numero = int(input("Digite um número até 999: "))
     if numero < 0 or numero > 999:
         print("Fora do intervalo permitido.")
     else:
-        print(numero_por_extenso(numero))
+        print(nPorExtenso(numero))
 
 
 
 # 44.
 # Faça uma função em Python que solicite a digitação de um número natural entre -9 e 9,
 # escrevendo então na tela o valor fornecido por extenso.
-# Versões: biblioteca, if/elif, usando a funcao numero_por_extenso que criei.
+# Versões: biblioteca, if/elif, usando a funcao nPorExtenso que criei.
 
 def nMenos9a9ToExtensoNum2Words():
     from num2words import num2words
@@ -1122,12 +3244,12 @@ def nMenos9a9ToExtenso2Func():
     if numero < -9 or numero > 9:
         print("Fora do intervalo permitido.")
     else:
-        print(numero_por_extenso(numero))
+        print(nPorExtenso(numero))
 
 # 45.
 # Faça uma função em Python que solicite a digitação de um número natural entre -99 e 99,
 # escrevendo então na tela o valor fornecido por extenso.
-# Versões: biblioteca, if/elif, usando a funcao numero_por_extenso que criei.
+# Versões: biblioteca, if/elif, usando a funcao nPorExtenso que criei.
 
 def nMenos99a99ToExtensoNum2Words():
     from num2words import num2words
@@ -1136,7 +3258,7 @@ def nMenos99a99ToExtensoNum2Words():
 
 
 def nMenos99a99ToExtensoIfElse():
-print("Digite um número natural entre -99 e 99: ")
+    print("Digite um número natural entre -99 e 99: ")
 
 
 def nMenos99a99ToExtenso2Func():
@@ -1144,7 +3266,7 @@ def nMenos99a99ToExtenso2Func():
     if numero < -99 or numero > 99:
         print("Fora do intervalo permitido.")
     else:
-        print(numero_por_extenso(numero))
+        print(nPorExtenso(numero))
 
 # 46.
 # Faça uma função em Python que solicite a digitação de um número natural entre -999 e 999,
@@ -1158,7 +3280,7 @@ def nMenos999a999ToExtensoNum2Words():
 
 
 def nMenos999a999ToExtensoIfElse():
-print("Digite um número natural entre -999 e 999: ")
+    print("Digite um número natural entre -999 e 999: ")
 
 
 def nMenos999a999ToExtenso2Func():
@@ -1166,7 +3288,7 @@ def nMenos999a999ToExtenso2Func():
     if numero < -999 or numero > 999:
         print("Fora do intervalo permitido.")
     else:
-        print(numero_por_extenso(numero))
+        print(nPorExtenso(numero))
 
 # 47.
 # Faça uma função em Python que solicite a digitação de um valor monetário entre R$ -9,99 e R$ 9,99,

@@ -39,7 +39,7 @@ def ordenar3NumerosEmCrescente():
 # 3.
 # Faça uma função em Python que solicite a digitação de quatro valores quaisquer,
 # informando-os em seguida em ordem crescente.
-def ordenar4NumerosEmCrescente():
+def ordenadr4NumerosEmCrescente():
     num1 = float(input("Digite o primeiro valor: "))
     num2 = float(input("Digite o segundo valor: "))
     num3 = float(input("Digite o terceiro valor: "))
@@ -117,7 +117,12 @@ def ordenar4NumerosEmCrescenteComFor():
 # F = C / 1.8 + 32
 # Menor temperatura possível em Celsius: -273.15
 def celciusToFahrenheit():
-    c = float(input("Digite a temperatura em Celsius: "))
+    try:
+        c = float(input("Digite a temperatura em Celsius: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if c < -273.15:
         print("Temperatura inválida. A menor temperatura possível em Celsius é -273.15.")
     else: #dava pra usar return no if e nao colocar o else, mas fica mais organizado assim
@@ -131,7 +136,12 @@ def celciusToFahrenheit():
 # C = 1.8 × (F − 32)
 # Menor temperatura possível em Fahrenheit: -459.67
 def fahrenheitToCelcius():
-    f = float(input("Digite a temperatura em Fahrenheit: "))
+    try:
+        f = float(input("Digite a temperatura em Fahrenheit: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if f < -459.67:
         print("Temperatura inválida. A menor temperatura possível em Fahrenheit é -459.67.")
     else:
@@ -145,7 +155,12 @@ def fahrenheitToCelcius():
 # K = C + 273.15
 # Menor temperatura possível em Celsius: -273.15
 def celciusToKelvin():
-    c = float(input("Digite a temperatura em Celsius: "))
+    try:
+        c = float(input("Digite a temperatura em Celsius: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if c < -273.15:
         print("Temperatura inválida. A menor temperatura possível em Celsius é -273.15.")
     else:
@@ -158,7 +173,12 @@ def celciusToKelvin():
 # C = K − 273.15
 # Menor temperatura possível em Kelvin: 0
 def kelvinToCelcius():
-    k = float(input("Digite a temperatura em Kelvin: "))
+    try:
+        k = float(input("Digite a temperatura em Kelvin: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if k < 0:
         print("Temperatura inválida. A menor temperatura possível em Kelvin é 0.")
     else:
@@ -170,7 +190,12 @@ def kelvinToCelcius():
 # R = (C + 491.67) × 1.8
 # Menor temperatura possível em Celsius: -273.15
 def celciusToRankine():
-    c = float(input("Digite a temperatura em Celsius: "))
+    try:
+        c = float(input("Digite a temperatura em Celsius: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if c < -273.15:
         print("Temperatura inválida. A menor temperatura possível em Celsius é -273.15.")
     else:
@@ -183,7 +208,12 @@ def celciusToRankine():
 # C = (R / 1.8) − 491.67
 # Menor temperatura possível em Rankine: 0
 def rankineToCelcius():
-    r = float(input("Digite a temperatura em Rankine: "))
+    try:
+        r = float(input("Digite a temperatura em Rankine: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if r < 0:
         print("Temperatura inválida. A menor temperatura possível em Rankine é 0.")
     else:
@@ -193,7 +223,12 @@ def rankineToCelcius():
 # Faça uma função em Python que converta temperaturas de Fahrenheit para Kelvin.
 # Menor temperatura possível em Fahrenheit: -459.67
 def fahrenheitToKelvin():
-    f = float(input("Digite a temperatura em Fahrenheit: "))
+    try:
+        f = float(input("Digite a temperatura em Fahrenheit: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if f < -459.67:
         print("Temperatura inválida. A menor temperatura possível em Fahrenheit é -459.67.")
     else:
@@ -204,7 +239,12 @@ def fahrenheitToKelvin():
 # Faça uma função em Python que converta temperaturas de Kelvin para Fahrenheit.
 # Menor temperatura possível em Kelvin: 0
 def kelvinToFahrenheit():
-    k = float(input("Digite a temperatura em Kelvin: "))
+    try:
+        k = float(input("Digite a temperatura em Kelvin: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if k < 0:
         print("Temperatura inválida. A menor temperatura possível em Kelvin é 0.")
     else:
@@ -215,7 +255,12 @@ def kelvinToFahrenheit():
 # Faça uma função em Python que converta temperaturas de Fahrenheit para Rankine.
 # Menor temperatura possível em Fahrenheit: -459.67
 def fahrenheitToRankine():
-    f = float(input("Digite a temperatura em Fahrenheit: "))
+    try:
+        f = float(input("Digite a temperatura em Fahrenheit: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if f < -459.67:
         print("Temperatura inválida. A menor temperatura possível em Fahrenheit é -459.67.")
     else:
@@ -226,7 +271,12 @@ def fahrenheitToRankine():
 # Faça uma função em Python que converta temperaturas de Rankine para Fahrenheit.
 # Menor temperatura possível em Rankine: 0
 def rankineToFahrenheit():
-    r = float(input("Digite a temperatura em Rankine: "))
+    try:
+        r = float(input("Digite a temperatura em Rankine: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if r < 0:
         print("Temperatura inválida. A menor temperatura possível em Rankine é 0.")
     else:
@@ -236,7 +286,12 @@ def rankineToFahrenheit():
 # Faça uma função em Python que converta temperaturas de Kelvin para Rankine.
 # Menor temperatura possível em Kelvin: 0
 def kelvinToRankine():
-    k = float(input("Digite a temperatura em Kelvin: "))
+    try:
+        k = float(input("Digite a temperatura em Kelvin: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if k < 0:
         print("Temperatura inválida. A menor temperatura possível em Kelvin é 0.")
     else:
@@ -247,7 +302,12 @@ def kelvinToRankine():
 # Faça uma função em Python que converta temperaturas de Rankine para Kelvin.
 # Menor temperatura possível em Rankine: 0
 def rankineToKelvin():
-    r = float(input("Digite a temperatura em Rankine: "))
+    try:
+        r = float(input("Digite a temperatura em Rankine: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número válido.")
+        return
+
     if r < 0:
         print("Temperatura inválida. A menor temperatura possível em Rankine é 0.")
     else:
@@ -447,8 +507,6 @@ def areaCirculo():
 
 
 
-# Outros exercícios
-
 # 29.
 # Faça uma função que calcule o IMC (Índice de Massa Corporal).
 # Entradas: peso (kg) e altura (m)
@@ -514,36 +572,38 @@ def menuConversaoTemperatura():
         print("0. Sair")
         
         opcao = input("Escolha uma opção: ")
-        
-        if opcao == "1":
-            celciusToFahrenheit()
-        elif opcao == "2":
-            fahrenheitToCelcius()
-        elif opcao == "3":
-            celciusToKelvin()
-        elif opcao == "4":
-            kelvinToCelcius()
-        elif opcao == "5":
-            celciusToRankine()
-        elif opcao == "6":
-            rankineToCelcius()
-        elif opcao == "7":
-            fahrenheitToKelvin()
-        elif opcao == "8":
-            kelvinToFahrenheit()
-        elif opcao == "9":
-            fahrenheitToRankine()
-        elif opcao == "10":
-            rankineToFahrenheit()
-        elif opcao == "11":
-            kelvinToRankine()
-        elif opcao == "12":
-            rankineToKelvin()
-        elif opcao == "0":
-            print("Saindo do menu...")
-            break
-        else:
-            print("Opção inválida! Tente novamente.")
+        try:
+            if opcao == "1":
+                celciusToFahrenheit()
+            elif opcao == "2":
+                fahrenheitToCelcius()
+            elif opcao == "3":
+                celciusToKelvin()
+            elif opcao == "4":
+                kelvinToCelcius()
+            elif opcao == "5":
+                celciusToRankine()
+            elif opcao == "6":
+                rankineToCelcius()
+            elif opcao == "7":
+                fahrenheitToKelvin()
+            elif opcao == "8":
+                kelvinToFahrenheit()
+            elif opcao == "9":
+                fahrenheitToRankine()
+            elif opcao == "10":
+                rankineToFahrenheit()
+            elif opcao == "11":
+                kelvinToRankine()
+            elif opcao == "12":
+                rankineToKelvin()
+            elif opcao == "0":
+                print("Saindo do menu...")
+                break
+            else:
+                print("Opção inválida! Tente novamente.")
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}. Tente novamente.")
 
 # 32.
 # Faça uma função com menu que reúna os exercícios 16 a 21 (perímetros).
@@ -631,7 +691,7 @@ def verifcarHorarioValido():
     else:
         print("Horário inválido.")    
 
-# Faça um relogio que funciona e e atualizado em tempo real no terminal
+#um relogio que funciona e e atualizado em tempo real no terminal
 def relogio():
     import time
     

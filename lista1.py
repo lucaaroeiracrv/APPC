@@ -93,7 +93,6 @@ def ordenadr4NumerosEmCrescente():
     else:        
         print(f"Valores em ordem crescente: {num4}, {num3}, {num2}, {num1}")
 
-
 #Usando listas e a função sorted:
 def ordenar4NumerosEmCrescenteComSorted():
     numeros = [
@@ -121,8 +120,7 @@ def celciusToFahrenheit():
         c = float(input("Digite a temperatura em Celsius: "))
     except ValueError:
         print("Entrada inválida. Por favor, digite um número válido.")
-        return
-
+        return 
     if c < -273.15:
         print("Temperatura inválida. A menor temperatura possível em Celsius é -273.15.")
     else: #dava pra usar return no if e nao colocar o else, mas fica mais organizado assim
@@ -555,7 +553,6 @@ def calcularLitrosAguaPorDia():
 # 31.
 # Faça uma função com menu que reúna os exercícios 4 a 15 (conversões de temperatura).
 def menuConversaoTemperatura():
-    while True:
         print("\n=== MENU DE CONVERSÃO DE TEMPERATURA ===")
         print("1. Celsius para Fahrenheit")
         print("2. Fahrenheit para Celsius")
@@ -599,12 +596,11 @@ def menuConversaoTemperatura():
                 rankineToKelvin()
             elif opcao == "0":
                 print("Saindo do menu...")
-                break
             else:
                 print("Opção inválida! Tente novamente.")
         except Exception as e:
             print(f"Ocorreu um erro: {e}. Tente novamente.")
-
+menuConversaoTemperatura()
 # 32.
 # Faça uma função com menu que reúna os exercícios 16 a 21 (perímetros).
 def menuPerimetros():
@@ -989,7 +985,6 @@ def gerarFuncaoIfElseSemNPorExtenso():
             f.write(f'        print("{texto}")\n')
     print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")
 
-gerarFuncaoIfElseComNPorExtenso()
 
 # 41.
 # Receba um número até 9 e escreva por extenso.

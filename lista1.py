@@ -737,7 +737,7 @@ def adicionarSegundosEmHorario():
                                     novaSegundo = totalSegundos % 60 # o numero de segundos vai ser o resto da divisao por 60, pq o resto da divisao por 60 vai ser o numero de segundos que sobra depois de tirar as horas e os minutos
                                     print(f"O novo horário é: {novaHora:02d}:{novaMinuto:02d}:{novaSegundo:02d}")
                                         
-adicionarSegundosEmHorario()
+
 
 #um relogio que funciona e e atualizado em tempo real no terminal
 def relogio():

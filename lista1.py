@@ -887,11 +887,12 @@ def menuAreas():
     except ValueError:
         print("Erro: valor inválido informado.")
         
+# 34.1
 # Faça um programa em Python que solicite a digitação de três valores representando,
 # respectivamente, as horas, os minutos e os segundos de um horário, verificando, a seguir se os
 # mesmos representam ou não um horário válido. Sendo válido o programa deverá solicitar a
 # digitação de uma quantidade de segundos, calcular e mostrar na tela o horário que se obtem ao
-# adiantar o horário digitado a quantidade de segundo também digitada
+# ADIANTAR o horário digitado a quantidade de segundo também digitada
 def adicionarSegundosEmHorario():
     try:
         horas = int(input("Digite as horas: "))
@@ -936,6 +937,57 @@ def adicionarSegundosEmHorario():
                                     novaSegundo = totalSegundos % 60 # o numero de segundos vai ser o resto da divisao por 60, pq o resto da divisao por 60 vai ser o numero de segundos que sobra depois de tirar as horas e os minutos
                                     print(f"O novo horário é: {novaHora:02d}:{novaMinuto:02d}:{novaSegundo:02d}")
                                         
+#34.2
+# Faça um programa em Python que solicite a digitação de três valores representando,
+# respectivamente, as horas, os minutos e os segundos de um horário, verificando, a seguir se os
+# mesmos representam ou não um horário válido. Sendo válido o programa deverá solicitar a
+# digitação de uma quantidade de segundos, calcular e mostrar na tela o horário que se obtem ao
+# ATRASAR o horário digitado a quantidade de segundo também digitada
+
+def removerSegundosEmHorario():
+    try:
+        horas = int(input("Digite as horas: "))
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um horario valido.")
+    else:
+        if horas < 0 or horas > 23:
+            print("Horário inválido.")
+            return
+        else:
+            try:
+                minutos = int(input("Digite os minutos: "))
+            except ValueError:
+                print("Entrada inválida. Por favor, digite um horario valido.")
+            else:
+                if minutos < 0 or minutos > 59:
+                    print("Horário inválido.")
+                    return
+                else:
+                    try:
+                        segundos = int(input("Digite os segundos: "))
+                    except ValueError:
+                        print("Entrada inválida. Por favor, digite um horario valido.")
+                    else:
+                        if segundos < 0 or segundos > 59:
+                            print("Horário inválido.")
+                            return
+                        else:
+                            try:
+                                segundosAdicionados = int(input("Digite os segundos a serem subtraídos: "))
+                            except ValueError:
+                                print("Entrada inválida. Por favor, digite um número válido.")
+                            else:
+                                if segundosAdicionados == 0:
+                                    print("A quantidade de segundos a ser subtraída deve ser um valor diferente de zero.")
+                                    return
+                                else:
+                                    totalSegundos = (horas * 3600 + minutos * 60 + segundos) - segundosAdicionados # converte tudo em segundos e remove os segundos que devem ser subtraidos
+                                    totalSegundos = totalSegundos % 86400 # 24h * 3600s = 86400s, entao o resto da divisao por 86400 vai ser o numero de segundos que sobra depois de passar de 24
+                                    novaHora = totalSegundos // 3600 # o numero de horas vai ser o total de segundos dividido por 3600
+                                    novaMinuto = (totalSegundos % 3600) // 60 # o numero de minutos vai ser o resto da divisao por 3600 dividido por 60, pq o resto da divisao por 3600 vai ser o numero de segundos que sobra depois de tirar as horas, e ai a gente divide por 60 pra saber quantos minutos tem nesse resto
+                                    novaSegundo = totalSegundos % 60 # o numero de segundos vai ser o resto da divisao por 60, pq o resto da divisao por 60 vai ser o numero de segundos que sobra depois de tirar as horas e os minutos
+                                    print(f"O novo horário é: {novaHora:02d}:{novaMinuto:02d}:{novaSegundo:02d}")
+
 
 #um relogio que funciona e e atualizado em tempo real no terminal
 def relogio():
@@ -1132,7 +1184,7 @@ def verificarDataValida():
             print("Dia inválido para o mês informado.")
             return
     else: #fevereiro
-        if (ano % 4 == 0 and ano % 100 != 0) or (ano % 400 == 0): #ano bissexto
+        if (ano % 4 == 0 and ano % 100 != 0) or (ano % 400 == 0): #ano bissexto, explicação: um ano é bissexto se for divisível por 4, mas não por 100, exceto se for também divisível por 400
             if dia > 29:
                 print("Dia inválido para fevereiro em ano bissexto.")
                 return

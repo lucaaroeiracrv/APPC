@@ -1174,7 +1174,7 @@ def nPorExtenso(num: int) -> str:
             partes.append("cem")
         else:
             partes.append(centenas[c])
-        num %= 100
+        num %= 100 # o resto da divisão por 100 vai ser o número que sobra depois de tirar as centenas, e ai a gente vai usar esse número pra calcular as dezenas e unidades, e se ele for diferente de 0, a gente tem que colocar um "e" entre as centenas e as dezenas/unidades
         if num:
             partes.append("e")
     # dezenas e unidades
@@ -1191,9 +1191,12 @@ def nPorExtenso(num: int) -> str:
 
 #funcao para criar funocoes de if, elif e else
 def gerarFuncaoIfElseComNPorExtenso():
-    
-    minimo = int(input("Digite o número mínimo: "))
-    maximo = int(input("Digite o número máximo: "))
+    try:
+        minimo = int(input("Digite o número mínimo: "))
+        maximo = int(input("Digite o número máximo: "))
+    except ValueError:
+        print("Erro: você deve digitar apenas números inteiros.")
+        return
 
     if minimo > maximo:
         print("Erro: o número mínimo não pode ser maior que o máximo.")
@@ -1205,48 +1208,59 @@ def gerarFuncaoIfElseComNPorExtenso():
     elif minimo < 0:
         nomeFuncao = f"nMenos{abs(minimo)}a{maximo}ToExtensoIfElse"
     else:
-        # numero minimo maior que 0, maniaco
         nomeFuncao = f"n{minimo}a{maximo}ToExtensoIfElse"
 
     nomeArquivo = f"{nomeFuncao}.txt"
 
-    with open(nomeArquivo, "w", encoding="utf-8") as f:
+    try:
+        with open(nomeArquivo, "w", encoding="utf-8") as f:
+            # Cabeçalho da função gerada
+            f.write(f"def {nomeFuncao}():\n")
+            f.write(
+                f'    numero = int(input("Digite um número entre {minimo} e {maximo}: "))\n'
+            )
+            f.write(f"    if numero < {minimo} or numero > {maximo}:\n")
+            f.write('        print("Fora do intervalo permitido.")\n')
+            f.write("        return\n")
 
-        # Cabeçalho da função gerada
-        f.write(f"def {nomeFuncao}():\n")
-        f.write(
-            f'    numero = int(input("Digite um número entre {minimo} e {maximo}: "))\n'
-        )
-        f.write(f"    if numero < {minimo} or numero > {maximo}:\n")
-        f.write('        print("Fora do intervalo permitido.")\n')
-        f.write("        return\n")
+            # Geração dos if / elif
+            for i in range(minimo, maximo + 1):
+                if i == minimo:
+                    f.write(f"    if numero == {i}:\n")
+                else:
+                    f.write(f"    elif numero == {i}:\n")
 
-        # Geração dos if / elif
-        for i in range(minimo, maximo + 1):
-            if i == minimo:
-                f.write(f"    if numero == {i}:\n")
-            else:
-                f.write(f"    elif numero == {i}:\n")
+                f.write(f'        print("{nPorExtenso(i)}")\n')
 
-            f.write(f'        print("{nPorExtenso(i)}")\n')
-
+    except OSError as e:
+        print("Erro ao criar o arquivo.")
+        print(f"Detalhes: {e}")
+        return
     print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")
 
 def gerarFuncaoIfElseSemNPorExtenso():
-    minimo = int(input("Digite o número mínimo: "))
-    maximo = int(input("Digite o número máximo: "))
+    try:
+        minimo = int(input("Digite o número mínimo: "))
+        maximo = int(input("Digite o número máximo: "))
+    except ValueError:
+        print("Erro: você deve digitar apenas números inteiros.")
+        return
+
     if minimo > maximo:
         print("Erro: o número mínimo não pode ser maior que o máximo.")
         return
-    #nome da funcao
+
+    # nome da função
     if minimo == 0:
         nomeFuncao = f"n{maximo}ToExtensoIfElse"
     elif minimo < 0:
-        nomeFuncao = f"nMenos{abs(minimo)}a{maximo}ToExtensoIfElse" # abs porque o numero minimo é negativo, entao tem que tirar o sinal de menos pra ficar bonitinho no nome da funcao
+        nomeFuncao = f"nMenos{abs(minimo)}a{maximo}ToExtensoIfElse"
     else:
         nomeFuncao = f"n{minimo}a{maximo}ToExtensoIfElse"
+
     nomeArquivo = f"{nomeFuncao}.txt"
-    #tabelas
+
+    # tabelas
     unidades = [
         "zero", "um", "dois", "três", "quatro",
         "cinco", "seis", "sete", "oito", "nove"
@@ -1263,47 +1277,63 @@ def gerarFuncaoIfElseSemNPorExtenso():
         "", "cento", "duzentos", "trezentos", "quatrocentos",
         "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"
     ]
-    with open(nomeArquivo, "w", encoding="utf-8") as f:
-        #cabecalho da função gerada
-        f.write(f"def {nomeFuncao}():\n")
-        f.write(
-            f'    numero = int(input("Digite um número entre {minimo} e {maximo}: "))\n'
-        )
-        f.write(f"    if numero < {minimo} or numero > {maximo}:\n")
-        f.write('        print("Fora do intervalo permitido.")\n')
-        f.write("        return\n\n")
-        for i in range(minimo, maximo + 1):
-            #conversao para extenso
-            n = i
-            texto = ""
-            if n < 0:
-                texto += "menos "
-                n = -n
-            if n == 0:
-                texto += "zero"
-            elif n == 100:
-                texto += "cem"
-            else:
-                partes = []
-                c = n // 100
-                d = (n % 100) // 10
-                u = n % 10
-                if c > 0:
-                    partes.append(centenas[c])
-                if d == 1:
-                    partes.append(dezADezenove[u])
+
+    try:
+        with open(nomeArquivo, "w", encoding="utf-8") as f:
+            # cabeçalho da função gerada
+            f.write(f"def {nomeFuncao}():\n")
+            f.write(
+                f'    numero = int(input("Digite um número entre {minimo} e {maximo}: "))\n'
+            )
+            f.write(f"    if numero < {minimo} or numero > {maximo}:\n")
+            f.write('        print("Fora do intervalo permitido.")\n')
+            f.write("        return\n\n")
+
+            for i in range(minimo, maximo + 1):
+                # conversão para extenso
+                n = i
+                texto = ""
+
+                if n < 0:
+                    texto += "menos "
+                    n = -n
+
+                if n == 0:
+                    texto += "zero"
+                elif n == 100:
+                    texto += "cem"
                 else:
-                    if d > 1:
-                        partes.append(dezenas[d])
-                    if u > 0:
-                        partes.append(unidades[u])
-                texto += " e ".join(partes)
-            #escrita do if/elif
-            if i == minimo:
-                f.write(f"    if numero == {i}:\n")
-            else:
-                f.write(f"    elif numero == {i}:\n")
-            f.write(f'        print("{texto}")\n')
+                    partes = []
+                    c = n // 100
+                    d = (n % 100) // 10
+                    u = n % 10
+
+                    if c > 0:
+                        partes.append(centenas[c])
+
+                    if d == 1:
+                        partes.append(dezADezenove[u])
+                    else:
+                        if d > 1:
+                            partes.append(dezenas[d])
+                        if u > 0:
+                            partes.append(unidades[u])
+
+                    texto += " e ".join(partes)
+
+                # escrita do if / elif
+                if i == minimo:
+                    f.write(f"    if numero == {i}:\n")
+                else:
+                    f.write(f"    elif numero == {i}:\n")
+
+                f.write(f'        print("{texto}")\n')
+
+    except OSError as e:
+        print("Erro ao criar ou escrever o arquivo.")
+        print(f"Detalhes: {e}")
+        return
+
     print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")
 
 
@@ -1313,16 +1343,38 @@ def gerarFuncaoIfElseSemNPorExtenso():
 
 #usando a biblioteca num2words
 def n9ToExtensoNum2Words():
-    from num2words import num2words
-    numero = int(input("Digite um número até 9: "))
-    print(num2words(numero, lang='pt_BR'))
+    try:
+        from num2words import num2words
+    except ImportError:
+        print("Erro: a biblioteca 'num2words' não está instalada.")
+        print("Instale com: pip install num2words")
+        return
+
+    try:
+        numero = int(input("Digite um número até 9: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
+    if numero < 0 or numero > 9:
+        print("Fora do intervalo permitido.")
+        return
+
+    print(num2words(numero, lang="pt_BR"))
 
 
 #versão com cadeia de if/elif/else
 def n9ToExtensoIfElse():
-    numero = int(input("Digite um número até 9: "))
+    try:
+        numero = int(input("Digite um número até 9: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < 0 or numero > 9:
         print("Fora do intervalo permitido.")
+        return
+
     if numero == 0:
         print("zero")
     elif numero == 1:
@@ -1348,47 +1400,92 @@ def n9ToExtensoIfElse():
 
 
 def n9ToExtenso2Func():
-    numero = int(input("Digite um número até 9: "))
+    try:
+        numero = int(input("Digite um número até 9: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < 0 or numero > 9:
         print("Fora do intervalo permitido.")
-    else:
-        print(nPorExtenso(numero))
+        return
+
+    print(nPorExtenso(numero))# acabei de perceber que nao precisa de try-excpet aqui pq ta tudo validado com a funcao nPorExtenso.
 
 # 42.
 # Receba um número até 99 e escreva por extenso.
 
 def n99ToExtensoNum2Words():
-    from num2words import num2words
-    numero = int(input("Digite um número até 99: "))
+    try:
+        from num2words import num2words
+    except ImportError:
+        print("Erro: a biblioteca 'num2words' não está instalada.")
+        return
+
+    try:
+        numero = int(input("Digite um número até 99: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
+    if numero < 0 or numero > 99:
+        print("Fora do intervalo permitido.")
+        return
+
     print(num2words(numero, lang='pt_BR'))
 
 
 # para versao if  else, use gerarFuncaoIfElseSemNPorExtenso() ou gerarFuncaoIfElseComNPorExtenso() 
 
 def n99ToExtenso2Func():
-    numero = int(input("Digite um número até 99: "))
+    try:
+        numero = int(input("Digite um número até 99: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < 0 or numero > 99:
         print("Fora do intervalo permitido.")
     else:
         print(nPorExtenso(numero))
+
+
 # 43.
 # Receba um número até 999 e escreva por extenso.
 
 def n999ToExtensoNum2Words():
-    from num2words import num2words
-    numero = int(input("Digite um número até 999: "))
+    try:
+        from num2words import num2words
+    except ImportError:
+        print("Erro: a biblioteca 'num2words' não está instalada.")
+        return
+
+    try:
+        numero = int(input("Digite um número até 999: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
+    if numero < 0 or numero > 999:
+        print("Fora do intervalo permitido.")
+        return
+
     print(num2words(numero, lang='pt_BR'))
+
 
 # para versao if  else, use gerarFuncaoIfElseSemNPorExtenso() ou gerarFuncaoIfElseComNPorExtenso() 
 
-
 def n999ToExtenso2Func():
-    numero = int(input("Digite um número até 999: "))
+    try:
+        numero = int(input("Digite um número até 999: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < 0 or numero > 999:
         print("Fora do intervalo permitido.")
     else:
         print(nPorExtenso(numero))
-
 
 
 # 44.
@@ -1397,16 +1494,36 @@ def n999ToExtenso2Func():
 # Versões: biblioteca, if/elif, usando a funcao nPorExtenso que criei.
 
 def nMenos9a9ToExtensoNum2Words():
-    from num2words import num2words
-    numero = int(input("Digite um número natural entre -9 e 9: "))
+    try:
+        from num2words import num2words
+    except ImportError:
+        print("Erro: a biblioteca 'num2words' não está instalada.")
+        return
+
+    try:
+        numero = int(input("Digite um número natural entre -9 e 9: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
+    if numero < -9 or numero > 9:
+        print("Fora do intervalo permitido.")
+        return
+
     print(num2words(numero, lang='pt_BR'))
 
 
 def nMenos9a9ToExtensoIfElse():
-    numero = int(input("Digite um número entre -9 e 9: "))
+    try:
+        numero = int(input("Digite um número entre -9 e 9: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < -9 or numero > 9:
         print("Fora do intervalo permitido.")
         return
+
     if numero == -9:
         print("menos nove")
     elif numero == -8:
@@ -1446,8 +1563,14 @@ def nMenos9a9ToExtensoIfElse():
     elif numero == 9:
         print("nove")
 
+
 def nMenos9a9ToExtenso2Func():
-    numero = int(input("Digite um número natural entre -9 e 9: "))
+    try:
+        numero = int(input("Digite um número natural entre -9 e 9: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < -9 or numero > 9:
         print("Fora do intervalo permitido.")
     else:
@@ -1459,21 +1582,39 @@ def nMenos9a9ToExtenso2Func():
 # Versões: biblioteca, if/elif, usando a funcao nPorExtenso que criei.
 
 def nMenos99a99ToExtensoNum2Words():
-    from num2words import num2words
-    numero = int(input("Digite um número natural entre -99 e 99: "))
+    try:
+        from num2words import num2words
+    except ImportError:
+        print("Erro: a biblioteca 'num2words' não está instalada.")
+        return
+
+    try:
+        numero = int(input("Digite um número natural entre -99 e 99: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
+    if numero < -99 or numero > 99:
+        print("Fora do intervalo permitido.")
+        return
+
     print(num2words(numero, lang='pt_BR'))
 
 
 # para versao if  else, use gerarFuncaoIfElseSemNPorExtenso() ou gerarFuncaoIfElseComNPorExtenso() 
 
-
-
 def nMenos99a99ToExtenso2Func():
-    numero = int(input("Digite um número natural entre -99 e 99: "))
+    try:
+        numero = int(input("Digite um número natural entre -99 e 99: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < -99 or numero > 99:
         print("Fora do intervalo permitido.")
     else:
         print(nPorExtenso(numero))
+
 
 # 46.
 # Faça uma função em Python que solicite a digitação de um número natural entre -999 e 999,
@@ -1481,14 +1622,34 @@ def nMenos99a99ToExtenso2Func():
 # Versões: biblioteca, if/elif, helper.
 
 def nMenos999a999ToExtensoNum2Words():
-    from num2words import num2words
-    numero = int(input("Digite um número natural entre -999 e 999: "))
+    try:
+        from num2words import num2words
+    except ImportError:
+        print("Erro: a biblioteca 'num2words' não está instalada.")
+        return
+
+    try:
+        numero = int(input("Digite um número natural entre -999 e 999: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
+    if numero < -999 or numero > 999:
+        print("Fora do intervalo permitido.")
+        return
+
     print(num2words(numero, lang='pt_BR'))
+
 
 # para versao if  else, use gerarFuncaoIfElseSemNPorExtenso() ou gerarFuncaoIfElseComNPorExtenso() 
 
 def nMenos999a999ToExtenso2Func():
-    numero = int(input("Digite um número natural entre -999 e 999: "))
+    try:
+        numero = int(input("Digite um número natural entre -999 e 999: "))
+    except ValueError:
+        print("Erro: digite apenas um número inteiro.")
+        return
+
     if numero < -999 or numero > 999:
         print("Fora do intervalo permitido.")
     else:
@@ -1501,95 +1662,109 @@ def nMenos999a999ToExtenso2Func():
 def gerarFuncaoValorMonetarioIfElse():
     nomeFuncao = "valorMonetarioExtensoIfElse"
     nomeArquivo = f"{nomeFuncao}.txt"
-    with open(nomeArquivo, "w", encoding="utf-8") as f:
-        f.write(f"def {nomeFuncao}():\n")
-        f.write('    try:\n')
-        f.write('        valor = float(input("Digite um valor entre -9.99 e 9.99: ").replace(",", "."))\n')
-        f.write('        if valor < -9.99 or valor > 9.99:\n')
-        f.write('            raise ValueError\n')
-        f.write('        if valor == 0:\n')
-        f.write('            print("zero reais")\n')
-        f.write('            return\n')
-        f.write('        negativo = valor < 0\n')
-        f.write('        valor = abs(valor)\n')
-        f.write('        reais = int(valor)\n')
-        f.write('        centavos = int(round((valor - reais) * 100))\n')
-        f.write('        resultado = []\n\n')
-        # negativo
-        f.write('        if negativo:\n')
-        f.write('            resultado.append("menos")\n\n')
-        for i, texto in [
-            (1, "um real"), (2, "dois reais"), (3, "três reais"),
-            (4, "quatro reais"), (5, "cinco reais"), (6, "seis reais"),
-            (7, "sete reais"), (8, "oito reais"), (9, "nove reais")
-        ]:
-            if i == 1:
-                f.write(f'        if reais == {i}:\n')
-            else:
-                f.write(f'        elif reais == {i}:\n')
-            f.write(f'            resultado.append("{texto}")\n')
-        f.write('\n        if centavos > 0:\n')
-        f.write('            if reais > 0:\n')
-        f.write('                resultado.append("e")\n')
-        centavos_extenso = {
-            1: "um", 2: "dois", 3: "três", 4: "quatro", 5: "cinco",
-            6: "seis", 7: "sete", 8: "oito", 9: "nove",
-            10: "dez", 11: "onze", 12: "doze", 13: "treze",
-            14: "quatorze", 15: "quinze", 16: "dezesseis",
-            17: "dezessete", 18: "dezoito", 19: "dezenove",
-            20: "vinte", 21: "vinte e um", 22: "vinte e dois",
-            23: "vinte e três", 24: "vinte e quatro",
-            25: "vinte e cinco", 26: "vinte e seis",
-            27: "vinte e sete", 28: "vinte e oito",
-            29: "vinte e nove", 30: "trinta",
-            31: "trinta e um", 32: "trinta e dois",
-            33: "trinta e três", 34: "trinta e quatro",
-            35: "trinta e cinco", 36: "trinta e seis",
-            37: "trinta e sete", 38: "trinta e oito",
-            39: "trinta e nove", 40: "quarenta",
-            41: "quarenta e um", 42: "quarenta e dois",
-            43: "quarenta e três", 44: "quarenta e quatro",
-            45: "quarenta e cinco", 46: "quarenta e seis",
-            47: "quarenta e sete", 48: "quarenta e oito",
-            49: "quarenta e nove", 50: "cinquenta",
-            51: "cinquenta e um", 52: "cinquenta e dois",
-            53: "cinquenta e três", 54: "cinquenta e quatro",
-            55: "cinquenta e cinco", 56: "cinquenta e seis",
-            57: "cinquenta e sete", 58: "cinquenta e oito",
-            59: "cinquenta e nove", 60: "sessenta",
-            61: "sessenta e um", 62: "sessenta e dois",
-            63: "sessenta e três", 64: "sessenta e quatro",
-            65: "sessenta e cinco", 66: "sessenta e seis",
-            67: "sessenta e sete", 68: "sessenta e oito",
-            69: "sessenta e nove", 70: "setenta",
-            71: "setenta e um", 72: "setenta e dois",
-            73: "setenta e três", 74: "setenta e quatro",
-            75: "setenta e cinco", 76: "setenta e seis",
-            77: "setenta e sete", 78: "setenta e oito",
-            79: "setenta e nove", 80: "oitenta",
-            81: "oitenta e um", 82: "oitenta e dois",
-            83: "oitenta e três", 84: "oitenta e quatro",
-            85: "oitenta e cinco", 86: "oitenta e seis",
-            87: "oitenta e sete", 88: "oitenta e oito",
-            89: "oitenta e nove", 90: "noventa",
-            91: "noventa e um", 92: "noventa e dois",
-            93: "noventa e três", 94: "noventa e quatro",
-            95: "noventa e cinco", 96: "noventa e seis",
-            97: "noventa e sete", 98: "noventa e oito",
-            99: "noventa e nove"
-        }
-        primeiro = True
-        for c in range(1, 100):
-            if primeiro:
-                f.write(f'            if centavos == {c}:\n')
-                primeiro = False
-            else:
-                f.write(f'            elif centavos == {c}:\n')
-            f.write(f'                resultado.append("{centavos_extenso[c]} centavos")\n')
-        f.write('\n        print(" ".join(resultado))\n')
-        f.write('    except ValueError:\n')
-        f.write('        print("Entrada inválida. Digite um valor válido entre -9,99 e 9,99.")\n')
-    print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")        
+
+    try:
+        with open(nomeArquivo, "w", encoding="utf-8") as f:
+            f.write(f"def {nomeFuncao}():\n")
+            f.write('    try:\n')
+            f.write('        valor = float(input("Digite um valor entre -9.99 e 9.99: ").replace(",", "."))\n')
+            f.write('        if valor < -9.99 or valor > 9.99:\n')
+            f.write('            raise ValueError\n')
+            f.write('        if valor == 0:\n')
+            f.write('            print("zero reais")\n')
+            f.write('            return\n')
+            f.write('        negativo = valor < 0\n')
+            f.write('        valor = abs(valor)\n')
+            f.write('        reais = int(valor)\n')
+            f.write('        centavos = int(round((valor - reais) * 100))\n')
+            f.write('        resultado = []\n\n')
+
+            # negativo
+            f.write('        if negativo:\n')
+            f.write('            resultado.append("menos")\n\n')
+
+            for i, texto in [
+                (1, "um real"), (2, "dois reais"), (3, "três reais"),
+                (4, "quatro reais"), (5, "cinco reais"), (6, "seis reais"),
+                (7, "sete reais"), (8, "oito reais"), (9, "nove reais")
+            ]:
+                if i == 1:
+                    f.write(f'        if reais == {i}:\n')
+                else:
+                    f.write(f'        elif reais == {i}:\n')
+                f.write(f'            resultado.append("{texto}")\n')
+
+            f.write('\n        if centavos > 0:\n')
+            f.write('            if reais > 0:\n')
+            f.write('                resultado.append("e")\n')
+
+            centavos_extenso = {
+                1: "um", 2: "dois", 3: "três", 4: "quatro", 5: "cinco",
+                6: "seis", 7: "sete", 8: "oito", 9: "nove",
+                10: "dez", 11: "onze", 12: "doze", 13: "treze",
+                14: "quatorze", 15: "quinze", 16: "dezesseis",
+                17: "dezessete", 18: "dezoito", 19: "dezenove",
+                20: "vinte", 21: "vinte e um", 22: "vinte e dois",
+                23: "vinte e três", 24: "vinte e quatro",
+                25: "vinte e cinco", 26: "vinte e seis",
+                27: "vinte e sete", 28: "vinte e oito",
+                29: "vinte e nove", 30: "trinta",
+                31: "trinta e um", 32: "trinta e dois",
+                33: "trinta e três", 34: "trinta e quatro",
+                35: "trinta e cinco", 36: "trinta e seis",
+                37: "trinta e sete", 38: "trinta e oito",
+                39: "trinta e nove", 40: "quarenta",
+                41: "quarenta e um", 42: "quarenta e dois",
+                43: "quarenta e três", 44: "quarenta e quatro",
+                45: "quarenta e cinco", 46: "quarenta e seis",
+                47: "quarenta e sete", 48: "quarenta e oito",
+                49: "quarenta e nove", 50: "cinquenta",
+                51: "cinquenta e um", 52: "cinquenta e dois",
+                53: "cinquenta e três", 54: "cinquenta e quatro",
+                55: "cinquenta e cinco", 56: "cinquenta e seis",
+                57: "cinquenta e sete", 58: "cinquenta e oito",
+                59: "cinquenta e nove", 60: "sessenta",
+                61: "sessenta e um", 62: "sessenta e dois",
+                63: "sessenta e três", 64: "sessenta e quatro",
+                65: "sessenta e cinco", 66: "sessenta e seis",
+                67: "sessenta e sete", 68: "sessenta e oito",
+                69: "sessenta e nove", 70: "setenta",
+                71: "setenta e um", 72: "setenta e dois",
+                73: "setenta e três", 74: "setenta e quatro",
+                75: "setenta e cinco", 76: "setenta e seis",
+                77: "setenta e sete", 78: "setenta e oito",
+                79: "setenta e nove", 80: "oitenta",
+                81: "oitenta e um", 82: "oitenta e dois",
+                83: "oitenta e três", 84: "oitenta e quatro",
+                85: "oitenta e cinco", 86: "oitenta e seis",
+                87: "oitenta e sete", 88: "oitenta e oito",
+                89: "oitenta e nove", 90: "noventa",
+                91: "noventa e um", 92: "noventa e dois",
+                93: "noventa e três", 94: "noventa e quatro",
+                95: "noventa e cinco", 96: "noventa e seis",
+                97: "noventa e sete", 98: "noventa e oito",
+                99: "noventa e nove"
+            }
+
+            primeiro = True
+            for c in range(1, 100):
+                if primeiro:
+                    f.write(f'            if centavos == {c}:\n')
+                    primeiro = False
+                else:
+                    f.write(f'            elif centavos == {c}:\n')
+                f.write(f'                resultado.append("{centavos_extenso[c]} centavos")\n')
+
+            f.write('\n        print(" ".join(resultado))\n')
+            f.write('    except ValueError:\n')
+            f.write('        print("Entrada inválida. Digite um valor válido entre -9,99 e 9,99.")\n')
+
+    except OSError as e:
+        print("Erro ao criar o arquivo.")
+        print(f"Detalhes: {e}")
+        return
+
+    print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")         
 
 
 # 47.
@@ -1600,276 +1775,54 @@ def gerarFuncaoValorMonetarioIfElse():
 # Não escrever “zero reais” e nem “zero centavos”, exceto no caso do saldo ser igual a zero.
 
 
-#versao n2words
+# versao n2words
 def valorMonetarioExtensoMenos9a9N2Words():
-    from n2words import n2words
+    try:
+        from n2words import n2words
+    except ImportError:
+        print("Erro: a biblioteca 'n2words' não está instalada.")
+        return
+
     try:
         valor = float(input("Digite um valor entre -9.99 e 9.99: ").replace(",", "."))
         if valor < -9.99 or valor > 9.99:
-            raise ValueError("Valor fora do intervalo permitido.") #podia ser print com return mas queria testar assim
+            raise ValueError("Valor fora do intervalo permitido.")  # podia ser print com return mas queria testar assim
+
         if valor == 0:
             print("zero reais")
             return
-        negativo = valor < 0 # verifica se o valor e negativo (true or false)
-        valor = abs(valor) # transforma o valor em positivo para facilitar a conversao
-        reais = int(valor) # valor em reais
-        centavos = int(round((valor - reais) * 100)) #valor em centavos, valor-reais = centavos, e faz * 100 para converter para centavos, round arredonda
-        partes = [] # lista das palavras 
+
+        negativo = valor < 0  # verifica se o valor e negativo (true or false)
+        valor = abs(valor)    # transforma o valor em positivo para facilitar a conversao
+
+        reais = int(valor)  # valor em reais
+        centavos = int(round((valor - reais) * 100))  
+        # valor em centavos, valor-reais = centavos, e faz * 100 para converter para centavos, round arredonda
+
+        partes = []  # lista das palavras 
+
         if negativo:
-            partes.append("menos") # se for negativo adiciona menos na frente
+            partes.append("menos")  # se for negativo adiciona menos na frente
+
         if reais > 0:
-            reaisExt = n2words(reais, lang="pt_BR") # converte reais para extenso
-            partes.append(reaisExt) # adiciona reais na lista
-            partes.append("real" if reais == 1 else "reais") # adiciona a palavra real/reais na lista
-        if centavos > 0: 
-            centavosExt = n2words(centavos, lang="pt_BR") # converte centavos para extenso
-            partes.append(centavosExt)  # adiciona centavos na lista
-            partes.append("centavo" if centavos == 1 else "centavos") # adiciona a palavra centavo/centavos na lista
-        print(" ".join(partes)) # junta as partes
+            reaisExt = n2words(reais, lang="pt_BR")  # converte reais para extenso
+            partes.append(reaisExt)                  # adiciona reais na lista
+            partes.append("real" if reais == 1 else "reais")  
+            # adiciona a palavra real/reais na lista
+
+        if centavos > 0:
+            centavosExt = n2words(centavos, lang="pt_BR")  # converte centavos para extenso
+            partes.append(centavosExt)                     # adiciona centavos na lista
+            partes.append("centavo" if centavos == 1 else "centavos")  
+            # adiciona a palavra centavo/centavos na lista
+
+        print(" ".join(partes))  # junta as partes
+
     except ValueError:
         print("Entrada inválida. Digite um número válido entre -9,99 e 9,99.")
 
-#versao if/else
-def valorMonetarioExtensoIfElse():
-    try:
-        valor = float(input("Digite um valor entre -9.99 e 9.99: ").replace(",", "."))
-        if valor < -9.99 or valor > 9.99:
-            raise ValueError("Fora do intervalo")
-        if valor == 0:
-            print("zero reais")
-            return
-        negativo = valor < 0
-        valor = abs(valor)
-        reais = int(valor)
-        centavos = int(round((valor - reais) * 100))
-        resultado = []
-        if negativo:
-            resultado.append("menos")
-        if reais == 1:
-            resultado.append("um real")
-        elif reais == 2:
-            resultado.append("dois reais")
-        elif reais == 3:
-            resultado.append("três reais")
-        elif reais == 4:
-            resultado.append("quatro reais")
-        elif reais == 5:
-            resultado.append("cinco reais")
-        elif reais == 6:
-            resultado.append("seis reais")
-        elif reais == 7:
-            resultado.append("sete reais")
-        elif reais == 8:
-            resultado.append("oito reais")
-        elif reais == 9:
-            resultado.append("nove reais")
-            
-        if centavos > 0:
-            if reais > 0:
-                resultado.append(" e ")
-            if centavos == 1:
-                resultado.append("um centavo")
-            elif centavos == 2:
-                resultado.append("dois centavos")
-            elif centavos == 3:
-                resultado.append("três centavos")
-            elif centavos == 4:
-                resultado.append("quatro centavos")
-            elif centavos == 5:
-                resultado.append("cinco centavos")
-            elif centavos == 6:
-                resultado.append("seis centavos")
-            elif centavos == 7:
-                resultado.append("sete centavos")
-            elif centavos == 8:
-                resultado.append("oito centavos")
-            elif centavos == 9:
-                resultado.append("nove centavos")
-            elif centavos == 10:
-                resultado.append("dez centavos")
-            elif centavos == 11:
-                resultado.append("onze centavos")
-            elif centavos == 12:
-                resultado.append("doze centavos")
-            elif centavos == 13:
-                resultado.append("treze centavos")
-            elif centavos == 14:
-                resultado.append("quatorze centavos")
-            elif centavos == 15:
-                resultado.append("quinze centavos")
-            elif centavos == 16:
-                resultado.append("dezesseis centavos")
-            elif centavos == 17:
-                resultado.append("dezessete centavos")
-            elif centavos == 18:
-                resultado.append("dezoito centavos")
-            elif centavos == 19:
-                resultado.append("dezenove centavos")
-            elif centavos == 20:
-                resultado.append("vinte centavos")
-            elif centavos == 21:
-                resultado.append("vinte e um centavos")
-            elif centavos == 22:
-                resultado.append("vinte e dois centavos")
-            elif centavos == 23:
-                resultado.append("vinte e três centavos")
-            elif centavos == 24:
-                resultado.append("vinte e quatro centavos")
-            elif centavos == 25:
-                resultado.append("vinte e cinco centavos")
-            elif centavos == 26:
-                resultado.append("vinte e seis centavos")
-            elif centavos == 27:
-                resultado.append("vinte e sete centavos")
-            elif centavos == 28:
-                resultado.append("vinte e oito centavos")
-            elif centavos == 29:
-                resultado.append("vinte e nove centavos")
-            elif centavos == 30:
-                resultado.append("trinta centavos")
-            elif centavos == 31:
-                resultado.append("trinta e um centavos")
-            elif centavos == 32:
-                resultado.append("trinta e dois centavos")
-            elif centavos == 33:
-                resultado.append("trinta e três centavos")
-            elif centavos == 34:
-                resultado.append("trinta e quatro centavos")
-            elif centavos == 35:
-                resultado.append("trinta e cinco centavos")
-            elif centavos == 36:
-                resultado.append("trinta e seis centavos")
-            elif centavos == 37:
-                resultado.append("trinta e sete centavos")
-            elif centavos == 38:
-                resultado.append("trinta e oito centavos")
-            elif centavos == 39:
-                resultado.append("trinta e nove centavos")
-            elif centavos == 40:
-                resultado.append("quarenta centavos")
-            elif centavos == 41:
-                resultado.append("quarenta e um centavos")
-            elif centavos == 42:
-                resultado.append("quarenta e dois centavos")
-            elif centavos == 43:
-                resultado.append("quarenta e três centavos")
-            elif centavos == 44:
-                resultado.append("quarenta e quatro centavos")
-            elif centavos == 45:
-                resultado.append("quarenta e cinco centavos")
-            elif centavos == 46:
-                resultado.append("quarenta e seis centavos")
-            elif centavos == 47:
-                resultado.append("quarenta e sete centavos")
-            elif centavos == 48:
-                resultado.append("quarenta e oito centavos")
-            elif centavos == 49:
-                resultado.append("quarenta e nove centavos")
-            elif centavos == 50:
-                resultado.append("cinquenta centavos")
-            elif centavos == 51:
-                resultado.append("cinquenta e um centavos")
-            elif centavos == 52:
-                resultado.append("cinquenta e dois centavos")
-            elif centavos == 53:
-                resultado.append("cinquenta e três centavos")
-            elif centavos == 54:
-                resultado.append("cinquenta e quatro centavos")
-            elif centavos == 55:
-                resultado.append("cinquenta e cinco centavos")
-            elif centavos == 56:
-                resultado.append("cinquenta e seis centavos")
-            elif centavos == 57:
-                resultado.append("cinquenta e sete centavos")
-            elif centavos == 58:
-                resultado.append("cinquenta e oito centavos")
-            elif centavos == 59:
-                resultado.append("cinquenta e nove centavos")
-            elif centavos == 60:
-                resultado.append("sessenta centavos")
-            elif centavos == 61:
-                resultado.append("sessenta e um centavos")
-            elif centavos == 62:
-                resultado.append("sessenta e dois centavos")
-            elif centavos == 63:
-                resultado.append("sessenta e três centavos")
-            elif centavos == 64:
-                resultado.append("sessenta e quatro centavos")
-            elif centavos == 65:
-                resultado.append("sessenta e cinco centavos")
-            elif centavos == 66:
-                resultado.append("sessenta e seis centavos")
-            elif centavos == 67:
-                resultado.append("sessenta e sete centavos")
-            elif centavos == 68:
-                resultado.append("sessenta e oito centavos")
-            elif centavos == 69:
-                resultado.append("sessenta e nove centavos")
-            elif centavos == 70:
-                resultado.append("setenta centavos")
-            elif centavos == 71:
-                resultado.append("setenta e um centavos")
-            elif centavos == 72:
-                resultado.append("setenta e dois centavos")
-            elif centavos == 73:
-                resultado.append("setenta e três centavos")
-            elif centavos == 74:
-                resultado.append("setenta e quatro centavos")
-            elif centavos == 75:
-                resultado.append("setenta e cinco centavos")
-            elif centavos == 76:
-                resultado.append("setenta e seis centavos")
-            elif centavos == 77:
-                resultado.append("setenta e sete centavos")
-            elif centavos == 78:
-                resultado.append("setenta e oito centavos")
-            elif centavos == 79:
-                resultado.append("setenta e nove centavos")
-            elif centavos == 80:
-                resultado.append("oitenta centavos")
-            elif centavos == 81:
-                resultado.append("oitenta e um centavos")
-            elif centavos == 82:
-                resultado.append("oitenta e dois centavos")
-            elif centavos == 83:
-                resultado.append("oitenta e três centavos")
-            elif centavos == 84:
-                resultado.append("oitenta e quatro centavos")
-            elif centavos == 85:
-                resultado.append("oitenta e cinco centavos")
-            elif centavos == 86:
-                resultado.append("oitenta e seis centavos")
-            elif centavos == 87:
-                resultado.append("oitenta e sete centavos")
-            elif centavos == 88:
-                resultado.append("oitenta e oito centavos")
-            elif centavos == 89:
-                resultado.append("oitenta e nove centavos")
-            elif centavos == 90:
-                resultado.append("noventa centavos")
-            elif centavos == 91:
-                resultado.append("noventa e um centavos")
-            elif centavos == 92:
-                resultado.append("noventa e dois centavos")
-            elif centavos == 93:
-                resultado.append("noventa e três centavos")
-            elif centavos == 94:
-                resultado.append("noventa e quatro centavos")
-            elif centavos == 95:
-                resultado.append("noventa e cinco centavos")
-            elif centavos == 96:
-                resultado.append("noventa e seis centavos")
-            elif centavos == 97:
-                resultado.append("noventa e sete centavos")
-            elif centavos == 98:
-                resultado.append("noventa e oito centavos")
-            elif centavos == 99:
-                resultado.append("noventa e nove centavos")
-        print(resultado)
-    except ValueError:
-        print("Entrada inválida. Digite um valor válido entre -9,99 e 9,99.")
 
-
+# para versao if/else use a funcao gerarFuncaoValorMonetarioIfElse()
 
 
 # 48.

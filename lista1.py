@@ -988,7 +988,6 @@ def removerSegundosEmHorario():
                                     novaSegundo = totalSegundos % 60 # o numero de segundos vai ser o resto da divisao por 60, pq o resto da divisao por 60 vai ser o numero de segundos que sobra depois de tirar as horas e os minutos
                                     print(f"O novo horário é: {novaHora:02d}:{novaMinuto:02d}:{novaSegundo:02d}")
 
-
 #um relogio que funciona e e atualizado em tempo real no terminal
 def relogio():
     import time   
@@ -1388,7 +1387,6 @@ def gerarFuncaoIfElseSemNPorExtenso():
 
     print(f"Arquivo '{nomeArquivo}' gerado com sucesso.")
 
-
 # 41.
 # Receba um número até 9 e escreva por extenso.
 # Exemplo: 5 → cinco
@@ -1501,6 +1499,99 @@ def n99ToExtenso2Func():
     else:
         print(nPorExtenso(numero))
 
+# versao feita em aula
+def numeroPorExtensoFeitoEmAula():
+    try:
+        n = int(input("Digite um número inteiro: "))
+    except ValueError:
+        print("Digite um número inteiro válido.")
+        return
+
+    if n < 0 or n > 99:
+        print("O número deve estar entre 0 e 99.")
+        return
+
+    if n == 0:
+        e = "zero"
+    elif n == 1:
+        e = "um"
+    elif n == 2:
+        e = "dois"
+    elif n == 3:
+        e = "três"
+    elif n == 4:
+        e = "quatro"
+    elif n == 5:
+        e = "cinco"
+    elif n == 6:
+        e = "seis"
+    elif n == 7:
+        e = "sete"
+    elif n == 8:
+        e = "oito"
+    elif n == 9:
+        e = "nove"
+    elif n == 10:
+        e = "dez"
+    elif n == 11:
+        e = "onze"
+    elif n == 12:
+        e = "doze"
+    elif n == 13:
+        e = "treze"
+    elif n == 14:
+        e = "quatorze"
+    elif n == 15:
+        e = "quinze"
+    elif n == 16:
+        e = "dezesseis"
+    elif n == 17:
+        e = "dezessete"
+    elif n == 18:
+        e = "dezoito"
+    elif n == 19:
+        e = "dezenove"
+    else:
+        dezena = n // 10
+        unidade = n % 10
+
+        if dezena == 2:
+            ext = "vinte"
+        elif dezena == 3:
+            ext = "trinta"
+        elif dezena == 4:
+            ext = "quarenta"
+        elif dezena == 5:
+            ext = "cinquenta"
+        elif dezena == 6:
+            ext = "sessenta"
+        elif dezena == 7:
+            ext = "setenta"
+        elif dezena == 8:
+            ext = "oitenta"
+        elif dezena == 9:
+            ext = "noventa"
+        
+        if unidade == 1:
+            ext += " e um"
+        elif unidade == 2:
+            ext += " e dois"
+        elif unidade == 3:
+            ext += " e três"
+        elif unidade == 4:
+            ext += " e quatro"
+        elif unidade == 5:
+            ext += " e cinco"
+        elif unidade == 6:
+            ext += " e seis"
+        elif unidade == 7:
+            ext += " e sete"
+        elif unidade == 8:
+            ext += " e oito"
+        elif unidade == 9:
+            ext += " e nove"
+        e = ext
+    print("O número é", e)
 
 # 43.
 # Receba um número até 999 e escreva por extenso.
